@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Phone Gap</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+        
+    </head>
+    
+<body onload="onBodyLoadAddMember()">
+
+    <div class="top_bar">
+        <a href="index.html"><div class="back">Back</div></a>
+        <div class="home_butt"><a href="index.html"><img src="images/home.png" /></a></div>
+    </div>
+
+
+    <div class="main">
+        <div id="signature">
+            <div id='img_close'>
+                <img src="images/sig_close.png" />
+            </div>
+            <div id='img_Done'>
+                <img src="images/done.png" />
+            </div>
+            <div id="sig_area">
+            </div>
+        </div>
+        <div class="heading">
+            <img src="images/add_member.png" />
+            <p>Add Member</p>
+        </div>
+
+        <div class="add_member_outter">
+            <div class="text_form_outter">
+                <p>First Name <span>*</span></p>
+                <div class="form_txt">
+                    <input id="newMemberFirstName" type="text" name="key" placeholder="FirstName" class="form_txt_bg">
+                </div>
+            </div>
+
+            <div class="text_form_outter">
+                <p>Last Name <span>*</span></p>
+                <div class="form_txt">
+                    <input id="newMemberLastName" type="text" name="key" placeholder="LastName" class="form_txt_bg">
+                </div>
+            </div>
+
+
+            <div class="text_form_outter">
+                <p>Email <span>*</span></p>
+                <div class="form_txt">
+                    <input id="newMemberEmail" type="text" name="key" placeholder="Email" class="form_txt_bg">
+                </div>
+            </div>
+
+            <div class="text_form_outter">
+                <p>Phone <span></span></p>
+                <div class="form_txt">
+                    <input id="newMemberPhone" type="number" name="key" placeholder="Phone Number" class="form_txt_bg" onkeypress="validate(event)">
+                </div>
+            </div>
+            <div class="text_form_outter">
+                <p>Company <span></span></p>
+                <div class="form_txt">
+                    <input id="newMemberComapny" type="text" name="key" placeholder="Comapny Name" class="form_txt_bg">
+                </div>
+            </div>
+            <div class="clear"></div>
+            
+            <div class="clear"></div>
+
+
+            <div class="text_form_outter">
+                <p></p>
+                <div class="form_txt">
+                    <div class="sub_outter">
+                        <input type="button" name="submit" value="submit" class="submit_button" onClick="SubmitPressed()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+
+    <div class="bottom_bar">
+        <div class="icons_outter">
+            <div class="tab">
+                <ul>
+                    <a href="index.html"><li>
+                        <img src="images/tab_member.png" />
+                        <p>Member</p>
+                    </li></a>
+
+
+
+                    <a href="visitor.html"><li>
+                        <img src="images/visitor.png" />
+                        <p>Visitors</p>
+                    </li></a>
+
+
+                    <a href="settings.html"><li style="border:none;">
+                        <img src="images/admin.png" />
+                        <p>Administration</p>
+                    </li></a>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+     <script src="js/jquery.min.js"></script>
+     <script type="text/javascript" src="js/index.js"></script>
+     <script type="text/javascript" src="js/addMember.js"></script>
+     <script src="js/jSignature.min.js"></script>
+     <script>
+        function add_signature()
+        {
+            $("#signature").show();
+            $("#sig_area").jSignature();
+        }
+        $(document).ready(function() {
+                          $("#signature").jSignature();
+                          $("#img_close").click(function () {
+                                                $("#signature").jSignature('reset');
+                                                $("#signature").hide();
+                                                });
+                          })
+         $("#img_Done").click(function () {
+                              $("#signature").jSignature('reset');
+                              $("#signature").hide();
+                              });
+    </script>
+</body>
+</html>

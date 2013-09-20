@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Phone Gap</title>
+<link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+<link href="css/jquery.ptTimeSelect.css" rel="stylesheet" type="text/css">
+<link href="css/style.css" rel="stylesheet" type="text/css">
+</head>
+    
+<body onload="onBodyLoadSettings()">
+
+    <div class="top_bar">
+        <a href="index.html"><div class="back">Back</div></a>
+        <div class="home_butt"><a href="index.html"><img src="images/home.png" /></a></div>
+    </div>
+
+
+    <div class="main">
+        <div class="heading">
+            <img src="images/settings_tab.png" />
+            <p>Administration</p>
+        </div>
+
+        <div class="settings_outter">
+            <div class="text_form_outter_s">
+                <p>Group Name <span>*</span></p>
+                <div class="form_txt_s">
+                    <input type="text" name="key" value="" class="form_txt_bg_s" id = "Groupname">
+                </div>
+            </div>
+
+            <div class="text_form_outter_s">
+                <p>Meeting fee <span>*</span></p>
+                <div class="form_txt_s">
+                    <input type="number" name="key" value="" class="form_txt_bg_s" onkeypress="validate(event)" id ="meetingFeeEntered" >
+                </div>
+            </div>
+            
+            <div class="text_form_outter_s">
+                <p>Meeting Time <span>*</span></p>
+                <div class="form_txt_s" id="sample2">
+                     <input name="s2Time2" class="form_txt_bg_s" value="" readonly="readonly" id ="meetingTime"/>
+                </div>
+            </div>
+
+            
+
+            <div class="text_form_outter_s">
+                <p>Require email <span>*</span></p>
+                <div class="form_txt_s">
+                    <div class="check_box">
+                        <input type="checkbox" style="width:25px; height:25px; " checked />
+                    </div>
+                </div>
+            </div>
+
+            <div class="text_form_outter_s">
+                <p>Require signature <span>*</span></p>
+                <div class="form_txt_s">
+                    <div class="check_box">
+                        <input type="checkbox" style="width:25px; height:25px;" checked/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text_form_outter_s">
+                <p>Allow pay for visitors <span>*</span></p>
+                <div class="form_txt_s">
+                    <div class="check_box">
+                        <input type="checkbox" style="width:25px; height:25px;" checked/>
+                    </div>
+                </div>
+            </div>
+            <div class="text_form_outter_s">
+                <div class="tab_s">
+                    <ul>
+                        <a href="add_member.html"><li>
+                            <img src="images/add_member.png" />
+                            <p>Add Member</p>
+                        </li></a>
+                        
+                        <a href="remove_member.html"><li>
+                            <img src="images/remove.png" />
+                            <p>Remove Member</p>
+                        </li></a>
+
+                        <a href="BalanceLess.html"><li>
+                            <img src="images/doller.png" />
+                            <p>Balance</p>
+                        </li></a>
+
+                        <a href="log.html"><li>
+                            <img src="images/log.png" />
+                            <p>Log</p>
+                        </li></a>
+
+
+                        <a href="#" id = "satartNewMeeting" onclick="startNewMeetingClicked();"><li>
+                            <img src="images/start_meeting.png" />
+                            <p>Start New Meeting</p>
+                        </li></a>
+
+                        <a href="sendRecieps.html"><li>
+                            <img src="images/send_rec.png" />
+                            <p>Send Receipts</p>
+                        </li></a>
+                        
+                        <a href="sendAttendence.html"><li>
+                            <img src="images/att.png" />
+                            <p>Send Attendence</p>
+                        </li></a>
+                        
+                        <a href="#" onclick="setLogoClicked();"><li>
+                            <img src="images/set_lo1.png" />
+                            <p>Set Logo</p>
+                        </li></a>
+
+                        
+                    </ul>
+
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="text_form_outter_s">
+                <p></p>
+                <div class="form_txt_s">
+                    <div class="email_outter">
+                        <input type="submit" name="submit" value="Email Setup" class="email_button" onclick="emailSetupClicked();"/>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="clear"></div>
+            <div class="text_form_outter_v">
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="buttons_s">
+                        <div class="cancel_outter">
+                            <input type="submit" name="submit" value="Cancel" class="cancel_button" />
+                        </div>
+
+                        <div class="save_outter">
+                            <input type="button" name="submit" value="Save" class="save_button" onclick="saveClicked();"/>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+
+    <div class="bottom_bar">
+        <div class="icons_outter">
+            <div class="tab">
+                <ul>
+                    <a href="index.html"><li>
+                        <img src="images/tab_member.png" />
+                        <p>Member</p>
+                    </li></a>
+
+
+                    <a href="visitor.html"><li>
+                        <img src="images/visitor.png" />
+                        <p>Visitors</p>
+                    </li></a>
+
+
+                    <a href="settings.html"><li style="border:none;">
+                        <img src="images/admin.png" />
+                        <p>Administration</p>
+                    </li></a>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="cordova-2.3.0.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/jquery.ptTimeSelect.js"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+                          // find the input fields and apply the time select to them.
+                          $('#sample2 input').ptTimeSelect({
+                                                           onBeforeShow: function(i){
+                                                           $('#sample2-data').append('onBeforeShow(event) Input field: [' + $(i).attr('name') + "], value: [" +$(i).val() +"]<br>");
+                                                           },
+                                                           onClose: function(i) {
+                                                           $('#sample2-data').append('onClose(event)Time selected: ' + $(i).val() + "<br>");
+                                                           
+                                                           }
+                                                           }); //end ptTimeSelect()
+                          }); // end ready()
+        </script>
+</body>
+</html>
