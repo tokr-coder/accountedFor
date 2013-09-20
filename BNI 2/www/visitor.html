@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Phone Gap</title>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+</head>
+    
+<body onload="onBodyLoadVisitor()">
+
+    <div class="top_bar">
+        <a href="index.html"><div class="back">Back</div></a>
+        <div class="home_butt"><a href="index.html"><img src="images/home.png" /></a></div>
+    </div>
+
+
+    <div class="main">
+        <div id="signature">
+            <div id='img_close'>
+                <img src="images/sig_close.png" />
+            </div>
+            <div id='img_Done'>
+                <img src="images/done.png" />
+            </div>
+            <div id="sig_area">
+            </div>
+        </div>
+        
+        <div class="heading">
+            <img src="images/visitor.png" />
+            <p>visitors</p>
+        </div>
+
+        <div class="visitors_outter">
+            <div class="text_form_outter_v">
+                <p>First Name <span>*</span></p>
+                <div class="form_txt_v">
+                    <input id="visitorFirstName" type="text" placeholder="FirstName" class="form_txt_bg_v">
+                </div>
+            </div>
+
+            <div class="text_form_outter_v">
+                <p>Email <span>*</span></p>
+                <div class="form_txt_v">
+                    <input id="visitorEmail" type="text" placeholder="Email" class="form_txt_bg_v">
+                </div>
+            </div>
+
+            <div class="text_form_outter_v">
+                <p>Phone <span>*</span></p>
+                <div class="form_txt_v">
+                    <input id="visitorPhoneNumber" type="number"  placeholder="Phone Number" class="form_txt_bg_v" onkeypress="validate(event)">
+                </div>
+            </div>
+
+            <div class="text_form_outter_v">
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="privacy">BNI respects your right to privacy and wishes to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that BNI may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. “PIPEDA”) and may do the following with your personal information.<br><br>
+                        1) Disclose your personal information to BNI Canada and to Business Network International (and you also consent to the collection of your personal information by those entities.)<br><br>
+                        2) Use your personal information to advise you of upcoming events and promotions.<br><br>
+                        In agreeing to the above, you acknowledge that the Privacy Laws, as set out in PIPEDA, do not apply to the collection, use and disclosure of your Personal Information by any of the entities named above. Notwithstanding the above, BNI*, nor any of its chapters, will sell or disclose your Personal Information in a list form to any other company or entity.</div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="sig_outter">
+                <label>I Agree:</label>
+                <input type="button" name="submit" value="Signature" onclick="add_signature();" class="sig_button" />
+            </div>
+            <div class="clear"></div>
+            <div class="text_form_outter_v">
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="meeting_fee" id ="MeetingFeeFromDb">Meeting Fee: </div>
+                </div>
+            </div>
+
+
+            <div class="text_form_outter_v">
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="radio_outter">
+                        <div class="radio"><label>Cash &nbsp;&nbsp;&nbsp;&nbsp;  </label><input onclick="document.getElementById('paymentByMember').disabled = true;" type="radio" id="radio_cash" name="cash" value="cash"   style="width:25px; height:25px;" checked/></div>
+                        <div class="radio"><label>Cheque&nbsp;</label><input onclick="document.getElementById('paymentByMember').disabled = true;" type="radio" id="radio_cheque" name="cash" value="check" style="width:25px; height:25px;" /></div>
+                        <div class="radio"><label>Paid By&nbsp;</label><input onclick="document.getElementById('paymentByMember').disabled = false;" type="radio" id="radio_paidBy" name="cash" value="check" style="width:25px; height:25px;" /></div>
+                        
+                        
+                        <div class="clear"></div>
+                            <div class="size_list_outter">
+                                <select name="age" class="size_list_bg" id = "paymentByMember"  >
+                                    <option value=""> Member </option> 
+                                </select></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text_form_outter_v">
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="buttons">
+                        <div class="clear_outter">
+                            <input type="button" name="submit" value="Clear" class="clear_button" onClick="ClearPressed()" />
+                        </div>
+
+                        <div class="pay_outter">
+                            <input type="submit" id = "PayInVisitor" name="submit" value="Pay" class="pay_button" onClick="payPressed()" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+
+    <div class="bottom_bar">
+        <div class="icons_outter">
+            <div class="tab">
+                <ul>
+                    <a href="index.html"><li>
+                        <img src="images/tab_member.png" />
+                        <p>Member</p>
+                    </li></a>
+
+
+
+                    <a href="visitor.html"><li>
+                        <img src="images/visitor.png" />
+                        <p>Visitors</p>
+                    </li></a>
+
+
+                    <a href="settings.html"><li style="border:none;">
+                        <img src="images/admin.png" />
+                        <p>Administration</p>
+                    </li></a>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/jquery.min.js"></script>
+     <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/visitor.js"></script>
+    <script src="js/jSignature.min.js"></script>
+    <script>
+        function add_signature()
+        {
+            $("#signature").show();
+            $("#sig_area").jSignature();
+        }
+        $(document).ready(function() {
+                          $("#signature").jSignature();
+                          $("#img_close").click(function () {
+                                                $("#signature").jSignature('reset');
+                                                $("#signature").hide();
+                                                });
+                          }
+                          )
+        $("#img_Done").click(function () {
+                              $("#signature").jSignature('reset');
+                              $("#signature").hide();
+                              });
+        
+        </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Phone Gap</title>
+<link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+<link href="css/jquery.ptTimeSelect.css" rel="stylesheet" type="text/css">
+<link href="css/style.css" rel="stylesheet" type="text/css">
+</head>
+    
+<body onload="onBodyLoadSettings()">
+
+    <div class="top_bar">
+        <a href="index.html"><div class="back">Back</div></a>
+        <div class="home_butt"><a href="index.html"><img src="images/home.png" /></a></div>
+    </div>
+
+
+    <div class="main">
+        <div class="heading">
+            <img src="images/settings_tab.png" />
+            <p>Administration</p>
+        </div>
+
+                <div class="nav">
+                    <ul>
+                        
+                        <a href="#" id = "satartNewMeeting" onclick="startNewMeetingClicked();"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/start_meeting.png"></div>
+                            </div>
+                            <p style="background:none; border:none;">Start a Meeting</p>
+                            <div class="power"><img src="images/pw.png" /></div>
+                        </li></a>
+                        
+                        <a href="#" id = "endNewMeeting" onclick="endMeetingClicked();"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/start_meeting.png"></div>
+                            </div>
+                            <p>End Meeting</p>
+                            <div class="power"><img src="images/pw1.png" /></div>
+                        </li></a>
+                        
+
+                        
+                        <a href="generalSettings.html"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/tab_member.png"></div>
+                            </div>
+                            <p>General</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+                        
+                        <a href="add_member.html"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/add_member.png"></div>
+                            </div>
+                            <p>Add Member</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+
+                        <a href="remove_member.html"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/remove.png"></div>
+                            </div>
+                            <p>Remove Member</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+
+                        <a href="BalanceLess.html"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/payment.png"></div>
+                            </div>
+                            <p>Balance</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+                        
+                        <a href="log.html"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/log.png"></div>
+                            </div>
+                            <p>Log</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+
+                        <a href="#" id ="sendReciepsButton" onclick="sendReciepsClicked();"><li>
+                           <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/send_rec.png"></div>
+                            </div>
+                            <p>Send receipts</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+
+                        <a href="sendAttendence.html"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/att.png"></div>
+                            </div>
+                            <p>Send Attendance</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+                        
+                        <a href="#" onclick="setLogoClicked();"><li>
+                            <div class="icon_outter">
+                                <div class="nav_icon"><img src="images/set_lo1.png"></div>
+                            </div>
+                            <p>Set Logo</p>
+                            <div class="view"><img src="images/view.png"></div>
+                        </li></a>
+
+                        
+                    </ul>
+
+                </div>
+            </div>
+   
+        
+    <div class="bottom_bar">
+        <div class="icons_outter">
+            <div class="tab">
+                <ul>
+                    <a href="index.html"><li>
+                        <img src="images/tab_member.png" />
+                        <p>Member</p>
+                    </li></a>
+
+
+                    <a href="visitor.html"><li>
+                        <img src="images/visitor.png" />
+                        <p>Visitors</p>
+                    </li></a>
+
+
+                    <a href="settings.html"><li style="border:none;">
+                        <img src="images/admin.png" />
+                        <p>Administration</p>
+                    </li></a>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="cordova-2.7.0.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/jquery.ptTimeSelect.js"></script>
+    
+</body>
+</html>
