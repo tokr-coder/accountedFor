@@ -29,7 +29,7 @@
         </div>
         <div class="heading">
             <img src="images/add_member.png" />
-            <p>Add Member</p>
+            <p><span id='title'>Add Member</span><span id='title_message'></span></p>
         </div>
 
         <div class="add_member_outter">
@@ -64,7 +64,13 @@
             <div class="text_form_outter">
                 <p>Company <span></span></p>
                 <div class="form_txt">
-                    <input id="newMemberComapny" type="text" name="key" placeholder="Comapny Name" class="form_txt_bg">
+                    <input id="newMemberComapny" type="text" name="key" placeholder="Company Name" class="form_txt_bg">
+                </div>
+            </div>
+            <div class="text_form_outter">
+                <p>Balance <span></span></p>
+                <div class="form_txt">
+                    <input id="newMemberBalance" type="number" name="key" placeholder="Member's starting balance" class="form_txt_bg">
                 </div>
             </div>
             <div class="clear"></div>
@@ -80,10 +86,39 @@
                     </div>
                 </div>
             </div>
+			<br/>
         </div>
         <div class="clear"></div>
     </div>
+        <div class="choose_outter">
+            <div class="text_form_outter">
+                <p>Existing Members</p>
+                <div class="form_txt_c"> 
+                    <div class="choose_member">
 
+                        <div class="size_list_outter_c">
+                            <select name="Choose Member" class="size_list_bg_c" id = "selectList">
+                                <option value="">Name</option>
+                        </select></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
+            <div class="text_form_outter_v">
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="buttons_s">
+                        <div class="save_outter">
+                            <input type="button" name="submit" value="Edit selected" class="save_button" onClick="loadClicked()" />
+                        </div>
+                        <div class="cancel_outter" style="display:none;">
+                            <input type="button" name="submit" value="Cancel Edit" class="cancel_button" onClick="resetForm()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <div class="bottom_bar">
         <div class="icons_outter">
@@ -115,6 +150,7 @@
      <script src="js/jquery.min.js"></script>
      <script type="text/javascript" src="js/index.js"></script>
      <script type="text/javascript" src="js/addMember.js"></script>
+	 <script type="text/javascript" src="js/remove_member.js"></script>
      <script src="js/jSignature.min.js"></script>
      <script>
         function add_signature()

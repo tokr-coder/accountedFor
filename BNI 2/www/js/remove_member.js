@@ -13,7 +13,6 @@ function cancelPressedInRemoveMember() {
 }
 
 function fillSelectOptionFromDatabase() {
-    
     if (!window.openDatabase) {
         alert('Databases are not supported in this browser.');
         return;

@@ -343,7 +343,7 @@ function addToLog(valueEntered,newBalance,selectedMemberId) {
 }
 
 function paymentSuccess (tx, resultset){
-    alert("Payment Sucess");
+    //alert("Payment Sucess");
     //document.getElementById("paymentAmount").value = '';
     window.location.href = "index.html";
     return false;

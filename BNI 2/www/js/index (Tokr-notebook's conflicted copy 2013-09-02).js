@@ -22,14 +22,14 @@ function nullHandler(){ //alert("added");
 
 function onBodyLoad(){
     
-    document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener("deviceready", onDeviceReady(), false);
 }
 
 
 function onDeviceReady()
 {
     
-    //alert("DEBUGGING: we are in the onBodyLoad() function");
+    alert("DEBUGGING: we are in the onBodyLoad() function");
     
     
     
@@ -77,6 +77,7 @@ function ListAllMembers() {
     
     
     if(meetingFee == null || groupName == null) {
+        document.getElementById("GroupNameDiv").innerHTML = "Group Name";
         alert("Enter meeting details in settings page !!");
     }else
     {

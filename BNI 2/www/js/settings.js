@@ -34,7 +34,7 @@ function onBodyLoadSettings(){
 }
 
 function endMeetingClicked(){
-    alert("Meeting End");
+    //alert("Meeting End");
     window.localStorage.setItem("isMeetingStarted", "0");
     window.localStorage.setItem("isMeetingEnd", "1");
     $('#satartNewMeeting').show();
@@ -156,7 +156,7 @@ function addToLog() {
 
 
 function startMeetingSuccess(){
-    alert("Meeting Started");
+    //alert("Meeting Started");
     window.location.href = "index.html";
     return false;
 };

@@ -1,7 +1,7 @@
 // Put your custom code here
-
+var EditExisting_id;
 function onBodyLoadAddMember(){
-    
+    fillSelectOptionFromDatabase();
 }
 
 function SubmitPressed() {
@@ -29,6 +29,50 @@ function ValidateEmail(inputText)
     }
 }
 
+function loadClicked(){
+	var sel = document.getElementById("selectList");
+    var idToLoad = sel.options[sel.selectedIndex].value;
+	if(idToLoad == ""){alert("Select a member to edit");}
+	else{
+        if (!window.openDatabase) {
+            alert('Databases are not supported in this browser.');
+            return;
+        }
+        db = openDatabase(shortName, version, displayName,maxSize);
+        db.transaction(function(transaction) {
+                       transaction.executeSql('SELECT * FROM Members where member_id = ?', [idToLoad],function(transaction, result) {
+							if(result != null && result.rows != null){
+								var row = result.rows.item(0);
+								$('#newMemberFirstName').val(row.member_firstname);
+								$('#newMemberLastName').val(row.member_lastname);
+								$('#newMemberEmail').val(row.member_email);
+								$('#newMemberPhone').val(row.member_phonenumber);
+								$('#newMemberComapny').val(row.member_company);
+								$('#newMemberBalance').val(row.member_balance);
+							}
+					   
+					   },  loadMemberSuccess(idToLoad), errorCB);
+                       },errorHandler,nullHandler);		
+	}
+
+}
+function loadMemberSuccess(id){
+	EditExisting_id=id;
+	$('#title').html('Editing Member with id: '+id);
+	$('.buttons_s .cancel_outter').css('display','block');
+}
+function resetForm(){
+	EditExisting_id='';
+	$('#title').html('Add Member');
+	$('.buttons_s .cancel_outter').css('display','none');
+	$('#newMemberFirstName').val('');
+	$('#newMemberLastName').val('');
+	$('#newMemberEmail').val('');
+	$('#newMemberPhone').val('');
+	$('#newMemberComapny').val('');
+	$('#newMemberBalance').val('');
+
+}
 
 function AddValueToDB() {
     //alert("Hi");
@@ -38,7 +82,15 @@ function AddValueToDB() {
     }
     
     db = openDatabase(shortName, version, displayName,maxSize);
-    var balance = 0;
+	
+	if(EditExisting_id != ''){
+        db.transaction(function(transaction) {
+                       transaction.executeSql('DELETE FROM Members where member_id = ?', [EditExisting_id], replacesuccess, errorCB);
+                       },errorHandler,nullHandler);	
+	}
+	
+    var balance = $('#newMemberBalance').val();
+	if(balance == ''){balance=0;}
     var checkintime = "No";
     var active = 0;
     
@@ -59,9 +111,15 @@ function AddValueToDB() {
     return false;
 }
 
+function replacesuccess(){
+//alert('deleted id '+ EditExisting_id);
+}
+
 function addedSucess(){
-    alert("Member Saved");
-    location.reload();
+    $('#title_message').html("  -  Member Saved").delay(2000).fadeOut();
+	$('#selectList').html('<option value="">Name</option>');
+	fillSelectOptionFromDatabase();
+    resetForm();
     return false;
     
     /*document.getElementById("newMemberFirstName").value = '';
