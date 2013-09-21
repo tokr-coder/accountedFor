@@ -14,9 +14,9 @@ table, caption, tbody, tfoot, thead, tr, th, td{margin:0px;    padding:0px; list
 
 
 
-@media only screen and (min-width: 100px) and (max-width:700px) 
+/*@media only screen and (min-width: 100px) and (max-width:700px) 
 {
-	
+*/	
 	
 .pay_m
 { width:100px; height:30px; margin:-10px auto;
@@ -1338,11 +1338,11 @@ border:solid 1px #dadada;
 .bni_large img
 { width:100px; height:50px; }
 
-}
+/*}*/
 
 
 
-@media only screen and (min-width: 670px) and (max-width:1279px) {
+/*@media only screen and (min-width: 670px) and (max-width:1279px) {*/
 /*@media only screen and (min-width: 6px) and (max-width:12px) {*/
 	
 	
@@ -2667,10 +2667,10 @@ border:solid 1px #dadada;
 .bni_large img
 { width:100px; height:50px; }
 
-}
+/*}
 
 @media only screen and (min-width: 1280px) 
-{
+{*/
 	
 	
 .pay_m
@@ -3994,5 +3994,5 @@ border:solid 1px #dadada;
 { width:100px; height:50px; }
 .late
 {color:red;}
-}
+/*}*/
 

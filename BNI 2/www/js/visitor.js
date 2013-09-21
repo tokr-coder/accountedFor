@@ -1,4 +1,3 @@
-// Put your custom code here
 var payByMemberBalance;
 
 $(document).ready(function() {
@@ -40,6 +39,7 @@ function onBodyLoadVisitor(){
         document.getElementById('radio_paidBy').disabled = false;
     }else{
         document.getElementById('radio_paidBy').disabled = true;
+		$('#radio_paidBy').parent().hide();
     }
 
 }

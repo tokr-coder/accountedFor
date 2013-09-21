@@ -356,7 +356,7 @@ function sendMemberSuccessAfterFetchingFromDb (){
 
 
 function setLogoClicked() {
-
+	alert("Image will be scaled to 100px x 50px. For best results use an image twice as wide as it is tall.");
     getPhoto();
 }
 
@@ -403,4 +403,7 @@ function sendReciepsClicked()
         window.location.href = "sendRecieps.html";
         return false;
     }
+}
+function helpClicked() {
+window.location.href = "help.html";
 }

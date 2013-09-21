@@ -64,23 +64,28 @@ function ListAllMembers() {
     var groupName=  window.localStorage.getItem("groupName");
     var meetingTime = window.localStorage.getItem("meetingTime");
     var imageURI = window.localStorage.getItem("imageLocation");
-    
+    var welcome = window.localStorage.getItem("showWelcomeScreen");
+
     
     document.getElementById("GroupNameDiv").innerHTML=groupName;
-    
+    if (window.localStorage.getItem("isMeetingStarted")!='1') document.getElementById("meeting_status").innerHTML = "- Meeting not started";
     var largeImage = document.getElementById('largeImage');
     if(imageURI == null){
-        largeImage.src = "images/bni_large.png";
+        largeImage.src = "images/accountedforicon.png";
     }else{
         largeImage.src = imageURI;
     }
     
     
     if(meetingFee == null || groupName == null) {
-        document.getElementById("GroupNameDiv").innerHTML = "Group Name";
-        alert("Enter meeting details in settings page !!");
-    }else
-    {
+		if (welcome == null) {
+			window.localStorage.setItem("showWelcomeScreen", "0");
+			window.location.href = "help.html";
+		}else{
+			document.getElementById("GroupNameDiv").innerHTML = "Group Name";
+			alert("Enter meeting details in the Administration tab !!");
+		}
+    }else{
 
 
     if (!window.openDatabase) {
@@ -99,10 +104,10 @@ function ListAllMembers() {
                                     var lname = row.member_lastname;
                                     var names = [fname, lname];
                                     var fullName = names.join(' ');
-                                          
+                                    var html; 
                                     var activeOrNot =row.member_active;
-                                     
-
+                                    var disabled = '';
+									if (window.localStorage.getItem("isMeetingStarted")=='0') disabled = 'disabled';
                                           
                                     if(activeOrNot==1){
                                           var htmlRow = '<ul><li class="wid1"';
@@ -113,11 +118,16 @@ function ListAllMembers() {
                                     }else{
                                           
                                           if(row.member_balance >= meetingFee) {
-                        
-                                                $('#MemberList').append('<ul><li class="wid1">'+ fullName +'</li><li class="wid2 sign'+ row.member_id +'"><input onClick="signInPressed((this.id))" type="button" class="login" value="Sign in" id="'+row.member_id+'"/></li><li class="wid2" style="border-right:none;"><a class="fee'+ row.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ row.member_id+'">Pre Paid</a></li></ul>');
+												html = '<ul><li class="wid1">'+ fullName +'</li><li class="wid2 sign'+ row.member_id +'"><input ';
+												if (disabled == '') html += 'onClick="signInPressed((this.id))" ';
+												html += 'type="button" class="login" value="Sign in" id="'+row.member_id+'" '+disabled+'/></li><li class="wid2" style="border-right:none;"><a class="fee'+ row.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ row.member_id+'">Pre Paid</a></li></ul>';
+                                                $('#MemberList').append(html);
                                           
                                           }else {
-                                                $('#MemberList').append('<ul><li class="wid1">'+ fullName +'</li><li class="wid2"><input type="button" class="login" value="Sign In" disabled="disabled"/></li><li class="wid2" style="border-right:none;"><a class="fee'+ row.member_id +'" href="payment.html?fromlink=no&id=' +row.member_id+'"><input type="button" class="login_pay" value="Pay &amp; Sign In"/></a></li></ul>');
+                                                html = '<ul><li class="wid1">'+ fullName +'</li><li class="wid2"><a class="fee'+ row.member_id +'" ';
+												if (disabled == '') html += 'href="payment.html?fromlink=no&id=' +row.member_id+'"';
+												html += '><input type="button" class="login_pay" value="Pay &amp; Sign In" '+disabled+'/></a></li><li class="wid2" style="border-right:none;"><a class="fee'+ row.member_id +'" style="color: red;" href="payment.html?fromlink=ok&id='+ row.member_id+'">Payment needed</a></li></ul>';
+												$('#MemberList').append(html);
                                           }
                                           
                                     }
