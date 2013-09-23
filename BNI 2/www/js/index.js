@@ -41,8 +41,7 @@ function onDeviceReady()
         db.transaction(function(tx){
                        tx.executeSql('CREATE TABLE IF NOT EXISTS Members(member_id INTEGER NOT NULL PRIMARY KEY, member_firstname TEXT NOT NULL, member_lastname TEXT NOT NULL, member_email TEXT NOT NULL, member_phonenumber TEXT NOT NULL, member_company TEXT NOT NULL, member_balance INTEGER NOT NULL, member_checkintime TEXT NOT NULL, member_active INTEGER NOT NULL)',
                                  [],nullHandler,errorHandler);
-                    },errorHandler,CreateLogTable);
-    
+                    },errorHandler,CreateLogTable);    
 }
 
 function CreateLogTable() {
@@ -55,7 +54,20 @@ function CreateLogTable() {
     db.transaction(function(tx){
                    tx.executeSql('CREATE TABLE IF NOT EXISTS Log(log_id INTEGER NOT NULL PRIMARY KEY, log_date TEXT NOT NULL, log_time TEXT NOT NULL, log_name TEXT NOT NULL, log_visitor INTEGER NOT NULL, log_action TEXT NOT NULL,log_balance INTEGER NOT NULL, log_paidBy TEXT NOT NULL, memberInLogId INTEGER NOT NULL, changeAmount INTEGER NOT NULL, signinOrPay INTEGER NOT NULL)',
                                  [],nullHandler,errorHandler);
-                   },errorHandler,ListAllMembers);
+                   },errorHandler,CreateReceiptTable);
+}
+
+function CreateReceiptTable() {
+    
+    if (!window.openDatabase) {
+        alert('Databases are not supported in this browser.');
+        return;
+    }
+    db = openDatabase(shortName, version, displayName,maxSize);
+	db.transaction(function(tx){
+				   tx.executeSql('CREATE TABLE IF NOT EXISTS Receipts(id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT NOT NULL, amount INTEGER NOT NULL, meetingdate TEXT NOT NULL, paymentmethod TEXT NOT NULL, sent BIT NOT NULL)',
+							 [],nullHandler,errorHandler);
+				},errorHandler,ListAllMembers);					
 }
 
 function ListAllMembers() {

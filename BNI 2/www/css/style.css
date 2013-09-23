@@ -400,7 +400,7 @@ display:block; float:left; cursor:pointer;
 {font:normal 22px "Arial"; color:#000000; text-align:left; float:left; color:#FFF; margin:25px 0 0 5px;}
 
 
-.member_outter
+.list_outter
 { width:97%;height:auto; padding:0 0 20px 0; float:left; margin:15px 0 0 30px;
 -moz-border-radius:10px; -khtml-border-radius:10px;-webkit-border-radius:10px; border-radius:10px;
 background:#FFF;
@@ -1729,7 +1729,7 @@ display:block; float:left; cursor:pointer;
 {font:normal 22px "Arial"; color:#000000; text-align:left; float:left; color:#FFF; margin:25px 0 0 5px;}
 
 
-.member_outter
+.list_outter
 { width:97%;height:auto; padding:0 0 20px 0; float:left; margin:15px 0 0 30px;
 -moz-border-radius:10px; -khtml-border-radius:10px;-webkit-border-radius:10px; border-radius:10px;
 background:#FFF;
@@ -3055,7 +3055,7 @@ display:block; float:left; cursor:pointer;
 {font:normal 22px "Arial"; color:#000000; text-align:left; float:left; color:#FFF; margin:25px 0 0 5px;}
 
 
-.member_outter
+.list_outter
 { width:97%;height:auto; padding:0 0 20px 0; float:left; margin:15px 0 0 30px;
 -moz-border-radius:10px; -khtml-border-radius:10px;-webkit-border-radius:10px; border-radius:10px;
 background:#FFF;

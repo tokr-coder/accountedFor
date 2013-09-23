@@ -3,7 +3,7 @@
 var selectedMemberId;
 var balance;
 var fromlink;
-var fullName;
+var fullName, member_email, member_company;
 
 $(document).ready(function() {
                   $('input[type="number"]').keyup(function() {
@@ -27,40 +27,36 @@ function onBodyLoadPayment(){
         document.getElementById("paymentAmount").value =meetingFeeInPay ;
         $('input[type="button"]').removeAttr('disabled');
     }
-    
-    fetchMemberDetails();
-}
-
-function fetchMemberDetails() {
-    
     if (!window.openDatabase) {
         alert('Databases are not supported in this browser.');
         return;
     }
     db = openDatabase(shortName, version, displayName,maxSize);
-    db.transaction(function(transaction) {
-                   transaction.executeSql('SELECT * FROM Members where member_id = ?', [selectedMemberId],function(transaction, result) {
-                                if (result != null && result.rows != null) {
-                                    for (var i = 0; i < result.rows.length; i++) {
-                                        var row = result.rows.item(i);
-                                        var fname = row.member_firstname;
-                                        var lname = row.member_lastname;
-                                        var names = [fname, lname];
-                                        fullName = names.join(' ');
-                                          
-                                        balance = row.member_balance;
-                                        var balanceInDoller = "$"+balance;
-                                        
-                                        document.getElementById("memberNameInPaymentPage").innerHTML=fullName;
-                                        document.getElementById("memberBalanceInPaymentPage").innerHTML=balanceInDoller;
-                                          
-                                    }    
-                                }
-                     },errorHandler);
-                   },errorHandler,nullHandler);
-    return;
+    db.transaction(fetchMemberDetails,errorHandler,nullHandler);
+}
 
-    
+function fetchMemberDetails(tx) {
+	tx.executeSql('SELECT * FROM Members where member_id = ?', [selectedMemberId],
+	function(tx, result) {
+		if (result != null && result.rows != null) {
+			for (var i = 0; i < result.rows.length; i++) {
+				var row = result.rows.item(i);
+				var fname = row.member_firstname;
+				var lname = row.member_lastname;
+				var names = [fname, lname];
+				fullName = names.join(' ');
+				member_email = row.member_email;
+				member_company = row.member_company;
+				  
+				balance = row.member_balance;
+				var balanceInDoller = "$"+balance;
+				
+				document.getElementById("memberNameInPaymentPage").innerHTML=fullName;
+				document.getElementById("memberBalanceInPaymentPage").innerHTML=balanceInDoller;
+				  
+			}    
+		}
+	},errorHandler);
 }
 
 function clearButtonPressedInPayment() {
@@ -200,11 +196,22 @@ function addToLog1(valueEntered,newBalance,selectedMemberId,intermediateProcess)
     }
     
     db = openDatabase(shortName, version, displayName,maxSize);
+	db.transaction(function(transaction) {
+	   transaction.executeSql(
+		   'INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',
+		   [my_date,my_time,fullName,vistor,action,intermediateProcess,payBy,selectedMemberId,changeAmount,signOrpay],
+		   saveReceipt(fullName,member_email,member_company,changeAmount,my_date,payBy,valueEntered,newBalance,selectedMemberId),
+		   errorHandler);
+	});
+}
+function saveReceipt(fullName,member_email,member_company,changeAmount,my_date,payBy,valueEntered,newBalance,selectedMemberId){
+	//'TABLE Receipts(id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT NOT NULL, amount INTEGER NOT NULL, meetingdate TEXT NOT NULL, paymentmethod TEXT NOT NULL)'
     db.transaction(function(transaction) {
-                   transaction.executeSql('INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',[my_date,my_time,fullName,vistor,action,intermediateProcess,payBy,selectedMemberId,changeAmount,signOrpay],addToLog2(valueEntered,newBalance,selectedMemberId),errorHandler);
-                   });
-    
-    
+		transaction.executeSql('INSERT INTO Receipts(name,email,company,amount,meetingdate,paymentmethod,sent) VALUES (?,?,?,?,?,?,?)',
+			[fullName,member_email,member_company,changeAmount,my_date,payBy,0],
+			addToLog2(valueEntered,newBalance,selectedMemberId),
+			errorHandler);
+	});
 }
 
 function addToLog2(valueEntered,newBalance,selectedMemberId) {
@@ -338,9 +345,8 @@ function addToLog(valueEntered,newBalance,selectedMemberId) {
     db.transaction(function(transaction) {
                    transaction.executeSql('INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',[my_date,my_time,fullName,vistor,action,newBalance,payBy,selectedMemberId,changeAmount,signOrpay],paymentSuccess,errorHandler);
                    });
-
-    
 }
+
 
 function paymentSuccess (tx, resultset){
     //alert("Payment Sucess");
