@@ -29,14 +29,14 @@
         
         <div class="heading">
             <img src="images/visitor.png" />
-            <p>visitors</p>
+            <p>Visitors <span id="meeting_status"></span></p>
         </div>
 
         <div class="visitors_outter">
             <div class="text_form_outter_v">
                 <p>First Name <span>*</span></p>
                 <div class="form_txt_v">
-                    <input id="visitorFirstName" type="text" placeholder="FirstName" class="form_txt_bg_v">
+                    <input id="visitorFirstName" type="text" placeholder="Full Name" class="form_txt_bg_v">
                 </div>
             </div>
 
@@ -48,7 +48,14 @@
             </div>
 
             <div class="text_form_outter_v">
-                <p>Phone <span>*</span></p>
+                <p>Company</p>
+                <div class="form_txt_v">
+                    <input id="company" type="text" placeholder="Business name" class="form_txt_bg_v">
+                </div>
+            </div>
+
+            <div class="text_form_outter_v">
+                <p>Phone</p>
                 <div class="form_txt_v">
                     <input id="visitorPhoneNumber" type="number"  placeholder="Phone Number" class="form_txt_bg_v" onkeypress="validate(event)">
                 </div>

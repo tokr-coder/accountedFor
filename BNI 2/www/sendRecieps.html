@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Phone Gap</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
+<!--link href="css/stylev2.css" rel="stylesheet" type="text/css"-->
 </head>
     
     
@@ -22,41 +23,29 @@
             <p>Send Receipts</p>
         </div>
 
-        <div class="choose_outter">
-            <div class="text_form_outter_c">
-                <p>Name <span>*</span></p>
-                <div class="form_txt_c"> 
-                    <div class="choose_member">
-
-                        <div class="size_list_outter_c">
-                            <select name="Choose Member" class="size_list_bg_c" id = "sendRecieptsMember">
-                                <option value="">Name</option>
-                        </select></div>
-                    </div>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <div class="clear"></div>
-            <div class="text_form_outter_v">
-                <p></p>
-                <div class="form_txt_v">
-                    <div class="buttons_sr">
-                        <div class="cancel_outter_sr">
-                            <input type="button" name="submit" value="Cancel" class="cancel_button_sr" onClick="cancelPressedInSendReceipts()" />
-                        </div>
-
-                        <div class="save_outter_sr">
-                            <input type="button" name="submit" value="Send" class="save_button_sr" onClick="sendReceiptsClicked()" />
-                        </div>
-                        
-                        <div class="sendall_outter_sr">
-                            <input type="button" name="submit" value="Send All" class="sendall_button_sr" onClick="sendReceiptsToAllClicked()" />
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+        <div class="list_outter">
+            <div class="summary" id="List">
+            </div>		
         </div>
+		<div class="text_form_outter_v">
+			<p></p>
+			<div class="form_txt_v">
+				<div class="buttons_sr">
+					<div class="cancel_outter_sr">
+						<input type="button" value="Uncheck All" class="cancel_button_sr" onClick="$('input:checkbox').attr('checked',false)" />
+					</div>
+
+					<div class="save_outter_sr">
+						<input type="button" value="Check Unsent" class="save_button_sr" onClick="$('.notsent input:checkbox').attr('checked',true)" />
+					</div>
+					
+					<div class="sendall_outter_sr">
+						<input type="button" value="Send Receipts" class="sendall_button_sr" onClick="sendReceiptsClicked()" />
+					</div>
+
+				</div>
+			</div>
+		</div>
         <div class="clear"></div>
     </div>
 

@@ -4,20 +4,20 @@ $(document).ready(function() {
                   $('input[type="submit"]').attr('disabled','disabled');
                    document.getElementById("paymentByMember").disabled=true;
                   $('input[type="text"]').keyup(function() {
-                                                if($('#visitorFirstName').val() != '' && $('#visitorEmail').val() !='' && $('#visitorPhoneNumber').val() !=''){
+                                                if($('#visitorFirstName').val() != '' && $('#visitorEmail').val() !='' ){
                                                 $('input[type="submit"]').removeAttr('disabled');
                                                 }
                                                 });
                   $('input[type="text"]').keyup(function() {
-                                                if($('#visitorFirstName').val() != '' && $('#visitorEmail').val() !='' && $('#visitorPhoneNumber').val() !=''){
+                                                if($('#visitorFirstName').val() != '' && $('#visitorEmail').val() !='' ){
                                                 $('input[type="submit"]').removeAttr('disabled');
                                                 }
                                                 });
-                  $('input[type="number"]').keyup(function() {
+                  /*$('input[type="number"]').keyup(function() {
                                                 if($('#visitorFirstName').val() != '' && $('#visitorEmail').val() !='' && $('#visitorPhoneNumber').val() !=''){
                                                 $('input[type="submit"]').removeAttr('disabled');
                                                 }
-                                                });
+                                                });*/
                   });
 
 
@@ -26,14 +26,18 @@ function onBodyLoadVisitor(){
     meetingFee = window.localStorage.getItem("meetingFee");
     
     if(meetingFee == null) {
-        alert("Enter meeting details in settings page !!");
+        alert("Enter meeting details in Administration tab !!");
     }else
     {
         var meetingFeeInDoller = "$"+meetingFee;
         document.getElementById("MeetingFeeFromDb").innerHTML=document.getElementById("MeetingFeeFromDb").innerHTML+meetingFeeInDoller;
         fillPayByMemberFromDatabase();
     }
-    
+    if (window.localStorage.getItem("isMeetingStarted")!='1'){
+		document.getElementById("meeting_status").innerHTML = "- Meeting not started";
+		$('input').attr('disabled','disabled');
+	}
+	
     var visitorAllow = window.localStorage.getItem("visitorAllow");
     if(visitorAllow == "1"){
         document.getElementById('radio_paidBy').disabled = false;
@@ -53,6 +57,7 @@ function ClearPressed() {
 //    }
     document.getElementById("visitorFirstName").value = '';
     document.getElementById("visitorEmail").value = '';
+    document.getElementById("company").value = '';
     document.getElementById("visitorPhoneNumber").value = '';
     
     var list = document.getElementById("paymentByMember");
@@ -90,8 +95,8 @@ function payPressed(){
         alert("Enter First Name");
     }else if($('#visitorEmail').val()=="") {
         alert("Enter Email");
-    }else if($('#visitorPhoneNumber').val()=="") {
-        alert("Enter Phone Number");
+    /*}else if($('#visitorPhoneNumber').val()=="") {
+        alert("Enter Phone Number");*/ // phone number is not required
     }else{
         var list = document.getElementById("paymentByMember");
         var paybymemberId = list.value;
@@ -136,7 +141,9 @@ function payPressed(){
               }
             
             var name = $('#visitorFirstName').val();
-            
+            var email = $('#visitorEmail').val()
+			var company = $('#company').val()
+			
             var vistor = 1;
             
             var action = "$"+meetingFee;
@@ -171,15 +178,26 @@ function payPressed(){
             
             db = openDatabase(shortName, version, displayName,maxSize);
             db.transaction(function(transaction) {
-                           transaction.executeSql('INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',[my_date,my_time,name,vistor,action,balanceForVisitor,payBy,memberidToLog,changeAmount,signOrpay],enteredIntoLogSuccess,errorHandler);
-                           });
-            
+				transaction.executeSql(
+					'INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',
+					[my_date,my_time,name,vistor,action,balanceForVisitor,payBy,memberidToLog,changeAmount,signOrpay],
+					saveReceipt(name,email,company,meetingFee,my_date,payBy),
+					errorHandler);
+			});
         }else{
             fetchPayByMemberDetails();
         }
       }
     }
    
+}
+function saveReceipt(name,email,company,meetingFee,my_date,payBy){
+	db.transaction(function(transaction) {
+		transaction.executeSql('INSERT INTO Receipts(name,email,company,amount,meetingdate,paymentmethod,sent) VALUES (?,?,?,?,?,?,?)',
+			[name,email,company,meetingFee,my_date,payBy,0],
+			enteredIntoLogSuccess,
+			errorHandler);
+	});
 }
 
 function enteredIntoLogSuccess (tx, resultset){
