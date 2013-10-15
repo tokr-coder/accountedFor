@@ -67,7 +67,6 @@ function clearButtonPressedInPayment() {
 function paymentPressedInPayment() {
     
     var valueEntered = $('#paymentAmount').val();
-    
     if(valueEntered == "") {
         alert("Enter Amount !");
     }else{
@@ -87,37 +86,8 @@ function paymentPressedInPayment() {
             
             var intermediateProcess = parseFloat(balance) + parseFloat(valueEntered);
             newBalance = parseFloat(balance) + parseFloat(valueEntered) - parseFloat(meetingFee);
-            var currentdate = new Date();
             
-            var hourInFull = currentdate.getHours();
-            if(hourInFull>12){
-                hourInFull = hourInFull - 12;
-            }
-            if(hourInFull<10){
-                hourInFull = "0"+hourInFull;
-            }
-            
-            var minutInFull = currentdate.getMinutes();
-            if(minutInFull<10){
-                minutInFull = "0"+minutInFull;
-            }
-            
-            var dateInFull = currentdate.getDate();
-            if(dateInFull<10){
-                dateInFull = "0"+dateInFull;
-            }
-            
-            var monthInFull = currentdate.getMonth()+1;
-            if(monthInFull<10){
-                monthInFull = "0"+monthInFull;
-            }
-            
-            var datetime = "" + dateInFull + "/"
-            + monthInFull  + "/"
-            + currentdate.getFullYear() + "  "
-            + hourInFull + ":"
-            + minutInFull + ":"
-            + currentdate.getSeconds();
+            var datetime = getdate() + " " + gettime();
             var active = 1;
             
             if(newBalance < 0){
@@ -139,36 +109,10 @@ function paymentPressedInPayment() {
 }
 
 function addToLog1(valueEntered,newBalance,selectedMemberId,intermediateProcess) {
-    
-    var currentDate = new Date()
-    var day = currentDate.getDate();
-    var month = currentDate.getMonth() + 1;
-    var year = currentDate.getFullYear();
-    if(day < 10){
-        day = "0"+day;
-    }
-    if(month < 10){
-        month = "0"+month;
-    }
-    var my_date = month+"-"+day+"-"+year;
-    
-    var hour = currentDate.getHours();
-    var minit = currentDate.getMinutes();
-    var my_time;
-    
-    if(hour>12){
-        hour = hour - 12;
-    }
-    if(hour<10){
-        hour = "0"+hour;
-    }
-    
-    if(minit<10) {
-        my_time = hour+":0"+minit;
-    }else {
-        my_time = hour+":"+minit;
-    }
-    
+    //records payment to log 
+    var my_date = getdate();
+    var my_time = gettime();
+        
     var vistor = 0;
     var action = "Paid +$"+valueEntered;
     
@@ -181,15 +125,7 @@ function addToLog1(valueEntered,newBalance,selectedMemberId,intermediateProcess)
     
     var changeAmount =valueEntered;
     var signOrpay = 0;
-    
-    /*alert(my_date);
-     alert(my_time);
-     alert(fullName);
-     alert(vistor);
-     alert(action);
-     alert(newBalance);
-     alert(payBy);*/
-    
+        
     if (!window.openDatabase) {
         alert('Databases are not supported in this browser.');
         return;
@@ -200,22 +136,27 @@ function addToLog1(valueEntered,newBalance,selectedMemberId,intermediateProcess)
 	   transaction.executeSql(
 		   'INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',
 		   [my_date,my_time,fullName,vistor,action,intermediateProcess,payBy,selectedMemberId,changeAmount,signOrpay],
-		   saveReceipt(fullName,member_email,member_company,changeAmount,my_date,payBy,valueEntered,newBalance,selectedMemberId),
+		   saveReceipt(fullName,member_email,member_company,changeAmount,my_date,payBy,newBalance,selectedMemberId),
 		   errorHandler);
 	});
 }
-function saveReceipt(fullName,member_email,member_company,changeAmount,my_date,payBy,valueEntered,newBalance,selectedMemberId){
+function saveReceipt(fullName,member_email,member_company,changeAmount,my_date,payBy,newBalance,selectedMemberId){
 	//'TABLE Receipts(id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT NOT NULL, amount INTEGER NOT NULL, meetingdate TEXT NOT NULL, paymentmethod TEXT NOT NULL)'
+	       if(debug) console.log('saveReceipt changeAmount: ' + changeAmount); 
+
+	if(changeAmount > 0){
     db.transaction(function(transaction) {
 		transaction.executeSql('INSERT INTO Receipts(name,email,company,amount,meetingdate,paymentmethod,sent) VALUES (?,?,?,?,?,?,?)',
 			[fullName,member_email,member_company,changeAmount,my_date,payBy,0],
-			addToLog2(valueEntered,newBalance,selectedMemberId),
+			addToLog2(changeAmount,newBalance,selectedMemberId),
 			errorHandler);
 	});
+	}else{
+		addToLog2(changeAmount,newBalance,selectedMemberId);
+	}
 }
 
-function addToLog2(valueEntered,newBalance,selectedMemberId) {
-    
+function getdate(){
     var currentDate = new Date()
     var day = currentDate.getDate();
     var month = currentDate.getMonth() + 1;
@@ -227,11 +168,12 @@ function addToLog2(valueEntered,newBalance,selectedMemberId) {
     if(month < 10){
         month = "0"+month;
     }
-    var my_date = month+"-"+day+"-"+year;
-    
+    return year+'-'+month+"-"+day;
+}
+function gettime(){
+    var currentDate = new Date()
     var hour = currentDate.getHours();
     var minit = currentDate.getMinutes();
-    var my_time;
     
     if(hour>12){
         hour = hour - 12;
@@ -241,12 +183,17 @@ function addToLog2(valueEntered,newBalance,selectedMemberId) {
     }
     
     if(minit<10) {
-        my_time = hour+":0"+minit;
+        return hour+":0"+minit;
     }else {
-        my_time = hour+":"+minit;
+        return hour+":"+minit;
     }
-    
-    
+}
+
+function addToLog2(valueEntered,newBalance,selectedMemberId) { 
+// records meeting fee deduction to log
+    var my_date = getdate();
+    var my_time = gettime();
+
     var meetingFeeInPay = window.localStorage.getItem("meetingFee");
     var vistor = 0;
     var action = "SignIn -$"+meetingFeeInPay;
@@ -260,15 +207,7 @@ function addToLog2(valueEntered,newBalance,selectedMemberId) {
     
     var changeAmount =valueEntered;
     var signOrpay = 2;
-    
-    /*alert(my_date);
-     alert(my_time);
-     alert(fullName);
-     alert(vistor);
-     alert(action);
-     alert(newBalance);
-     alert(payBy);*/
-    
+        
     if (!window.openDatabase) {
         alert('Databases are not supported in this browser.');
         return;
@@ -284,36 +223,9 @@ function addToLog2(valueEntered,newBalance,selectedMemberId) {
 
 
 function addToLog(valueEntered,newBalance,selectedMemberId) {
-    
-    var currentDate = new Date()
-    var day = currentDate.getDate();
-    var month = currentDate.getMonth() + 1;
-    var year = currentDate.getFullYear();
-    
-    if(day < 10){
-        day = "0"+day;
-    }
-    if(month < 10){
-        month = "0"+month;
-    }
-    var my_date = month+"-"+day+"-"+year;
-    
-    var hour = currentDate.getHours();
-    var minit = currentDate.getMinutes();
-    var my_time;
-    
-    if(hour>12){
-        hour = hour - 12;
-    }
-    if(hour<10){
-        hour = "0"+hour;
-    }
-    
-    if(minit<10) {
-        my_time = hour+":0"+minit;
-    }else {
-        my_time = hour+":"+minit;
-    }
+//records payment to log when only payment is made (not signin)
+	var my_date = getdate();
+    var my_time = gettime();
     
     var vistor = 0;
     var action = "Paid +$"+valueEntered;
@@ -328,14 +240,6 @@ function addToLog(valueEntered,newBalance,selectedMemberId) {
     var changeAmount =valueEntered;
     var signOrpay = 0;
     
-    /*alert(my_date);
-    alert(my_time);
-    alert(fullName);
-    alert(vistor);
-    alert(action);
-    alert(newBalance);
-    alert(payBy);*/
-    
     if (!window.openDatabase) {
         alert('Databases are not supported in this browser.');
         return;
@@ -343,10 +247,20 @@ function addToLog(valueEntered,newBalance,selectedMemberId) {
     
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
-                   transaction.executeSql('INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',[my_date,my_time,fullName,vistor,action,newBalance,payBy,selectedMemberId,changeAmount,signOrpay],paymentSuccess,errorHandler);
+                   transaction.executeSql('INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',[my_date,my_time,fullName,vistor,action,newBalance,payBy,selectedMemberId,changeAmount,signOrpay],
+				   function(){
+					if(changeAmount > 0){
+						db.transaction(function(transaction) {
+							transaction.executeSql('INSERT INTO Receipts(name,email,company,amount,meetingdate,paymentmethod,sent) VALUES (?,?,?,?,?,?,?)',
+								[fullName,member_email,member_company,changeAmount,my_date,payBy,0],
+								addToLog2(changeAmount,newBalance,selectedMemberId),
+								errorHandler);
+						});
+					}
+				   }
+				   ,errorHandler);
                    });
 }
-
 
 function paymentSuccess (tx, resultset){
     //alert("Payment Sucess");

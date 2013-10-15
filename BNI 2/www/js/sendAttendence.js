@@ -127,7 +127,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
 
       $.ajax({
      type: "POST",
-     url: 'http://198.1.74.28/~spaniac1/bni/attendence.php',
+     url: 'http://accountedfor.biz/send/attendence.php',
      dataType: 'json',
      data: {"memberNameToSendArray":memberNameToSendArray , "memberEmailToSendArray":memberEmailToSendArray , "memberPhoneToSendArray":memberPhoneToSendArray ,"memberBalanceToSendArray":memberBalanceToSendArray ,"memberCheckInTimeToSendArray":memberCheckInTimeToSendArray, "email_to":memberEmailToSend , "meeting_date":meetingTimeFromDB ,"groupName":groupName , "emailSetupValue":emailSetupValue},
      timeout: 5000,

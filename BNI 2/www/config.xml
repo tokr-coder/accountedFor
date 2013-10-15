@@ -60,7 +60,7 @@
         <plugin name="Globalization" value="CDVGlobalization" /-->
     </plugins>
 
-    <access origin="http://198.1.74.28*"/>
+    <access origin="http://accountedfor.biz"/>
     <access origin="*"/>
 
     

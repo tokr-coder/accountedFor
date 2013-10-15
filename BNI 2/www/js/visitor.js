@@ -38,6 +38,10 @@ function onBodyLoadVisitor(){
 		$('input').attr('disabled','disabled');
 	}
 	
+    var requireSig = window.localStorage.getItem("requireSig");
+    if(requireSig == "0"){
+		$('.privacy, .sig_outter').hide();
+	}
     var visitorAllow = window.localStorage.getItem("visitorAllow");
     if(visitorAllow == "1"){
         document.getElementById('radio_paidBy').disabled = false;

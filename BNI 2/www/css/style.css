@@ -17,7 +17,30 @@ table, caption, tbody, tfoot, thead, tr, th, td{margin:0px;    padding:0px; list
 /*@media only screen and (min-width: 100px) and (max-width:700px) 
 {
 */	
-	
+
+.container:before,
+.container:after {
+    content:"";
+    display:table;
+}
+.container:after {
+    clear:both;
+}
+
+/* help page */
+#help_outter_Id {
+width: 97%;
+margin: 105px 0 0 30px;
+background: #fff;
+padding: 0 0 20px 0;
+border-radius: 10px;
+}
+#help_inner{}
+#help_inner > div{
+width:27%;
+margin:3%;
+float: left;
+}	
 .pay_m
 { width:100px; height:30px; margin:-10px auto;
 background: #ffffff;
@@ -677,8 +700,6 @@ border:solid 1px #FFFFFF;
 color:#000; font:normal 18px "Arial"; cursor:pointer; text-align:center;
 text-shadow: 1px 1px #FFFFFF;
 }
-
-
 
 /* visitors Page */
 

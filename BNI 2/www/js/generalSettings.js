@@ -4,17 +4,20 @@ function onBodyLoadGeneralSettings(){
     var meetingGroupTextValue = window.localStorage.getItem("groupName");
     var meetingTimeTextValue = window.localStorage.getItem("meetingTime");
     var meetingPayForVisitor = window.localStorage.getItem("visitorAllow");
+    var meetingRequireSig = window.localStorage.getItem("requireSig");
     
     if(meetingFeeTextValue != null && meetingGroupTextValue != null && meetingTimeTextValue != null && meetingPayForVisitor != null) {
        document.getElementById("meetingFeeEntered").value = meetingFeeTextValue ;
         document.getElementById("Groupname").value = meetingGroupTextValue;
         document.getElementById("meetingTime").value = meetingTimeTextValue;
 		if(meetingPayForVisitor == "0") document.getElementById("visitorAllow").checked = false;
+		if(meetingRequireSig == "0") document.getElementById("requireSig").checked = false;
     } else {
         document.getElementById("meetingFeeEntered").value = '';
         document.getElementById("Groupname").value = '';
         document.getElementById("meetingTime").value = '';
 		document.getElementById("visitorAllow").checked = true;
+		document.getElementById("requireSig").checked = true;
     }
 
 }
@@ -42,6 +45,12 @@ function saveClicked() {
             window.localStorage.setItem("visitorAllow", "1");
         }else{
             window.localStorage.setItem("visitorAllow", "0");
+        }
+        
+        if(document.getElementById("requireSig").checked == true){
+            window.localStorage.setItem("requireSig", "1");
+        }else{
+            window.localStorage.setItem("requireSig", "0");
         }
         
         alert("Saved");
@@ -83,6 +92,11 @@ function emailSetupClicked() {
                     window.localStorage.setItem("visitorAllow", "1");
                 }else{
                     window.localStorage.setItem("visitorAllow", "0");
+                }
+                if(document.getElementById("requireSig").checked == true){
+                    window.localStorage.setItem("requireSig", "1");
+                }else{
+                    window.localStorage.setItem("requireSig", "0");
                 }
                 window.location.href = "emailSetup.html";
             }

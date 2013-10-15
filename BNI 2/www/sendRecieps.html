@@ -42,6 +42,14 @@
 					<div class="sendall_outter_sr">
 						<input type="button" value="Send Receipts" class="sendall_button_sr" onClick="sendReceiptsClicked()" />
 					</div>
+					
+					<div class="options_outter_sr">
+						<select name="do" class="" id="selectWhatToDo">
+							<option value='mark_sent'>Mark as sent</option>							<option value='mark_notsent'>Mark as not sent</option>
+							<option value='remove'>Remove</option>
+						</select>
+						<input type="button" value="Do with selected" class="button_sr" onClick="doWithSelectedClicked()" />
+					</div>
 
 				</div>
 			</div>

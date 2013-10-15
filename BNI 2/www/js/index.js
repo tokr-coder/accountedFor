@@ -4,8 +4,8 @@ var shortName = 'BNISqlDB';
 var version = '1.0';
 var displayName = 'BNISqlDB';
 var maxSize = 65535;
-
 var meetingFee;
+var debug = true;
 
 // this is called when an error happens in a transaction
 function errorHandler(transaction, error) {
@@ -324,7 +324,7 @@ function Update() {
 }
 
 function updatetable (tx, resultset){
-    console.log("updated something");
+    if(debug) console.log("updated something");
 }
 
 function errorCB(err)
