@@ -59,12 +59,12 @@ function loadClicked(){
 function loadMemberSuccess(id){
 	EditExisting_id=id;
 	$('#title').html('Editing Member with id: '+id);
-	$('.buttons_s .cancel_outter').css('display','block');
+	$('.cancel_button').parent().css('display','block');
 }
 function resetForm(){
 	EditExisting_id='';
 	$('#title').html('Add Member');
-	$('.buttons_s .cancel_outter').css('display','none');
+	$('.cancel_button').parent().css('display','none');
 	$('#newMemberFirstName').val('');
 	$('#newMemberLastName').val('');
 	$('#newMemberEmail').val('');

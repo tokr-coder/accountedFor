@@ -5,7 +5,7 @@ var version = '1.0';
 var displayName = 'BNISqlDB';
 var maxSize = 65535;
 var meetingFee;
-var debug = true;
+var debug = false;
 
 // this is called when an error happens in a transaction
 function errorHandler(transaction, error) {

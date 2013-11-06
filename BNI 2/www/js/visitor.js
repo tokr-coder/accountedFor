@@ -47,7 +47,8 @@ function onBodyLoadVisitor(){
         document.getElementById('radio_paidBy').disabled = false;
     }else{
         document.getElementById('radio_paidBy').disabled = true;
-		$('#radio_paidBy').parent().hide();
+		$('#radio_paidBy, #paymentByMember').parent().hide();
+		
     }
 
 }

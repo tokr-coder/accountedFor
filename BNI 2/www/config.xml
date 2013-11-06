@@ -22,14 +22,21 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
     xmlns:gap = "http://phonegap.com/ns/1.0"
     id        = "com.spaniac.BNI"
-    version   = "1.0.1">
+    version   = "1.2.1">
     
     <name>Accounted For</name>
     
     <description>
-        Application To Track Meetings
+        Application To Track Meeting fees and attendance
     </description>
 
+	<gap:platform name="ios" />
+	<gap:platform name="android" />
+	<gap:platform name="webos" />
+	<!--gap:platform name="symbian" />
+	<gap:platform name="blackberry" />
+	<gap:platform name="winphone" /-->
+	<preference name="target-device" value="tablet" />
     
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
     <preference name="SuppressesIncrementalRendering" value="false" />
@@ -43,18 +50,27 @@
     <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="OpenAllWhitelistURLsInWebView" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
+    
 
+	<feature name="http://api.phonegap.com/1.0/file"/>
+	<feature name="http://api.phonegap.com/1.0/network"/>
+	<!--feature name="http://api.phonegap.com/1.0/battery"/>
+	<feature name="http://api.phonegap.com/1.0/camera"/>
+	<feature name="http://api.phonegap.com/1.0/media"/>
+	<feature name="http://api.phonegap.com/1.0/geolocation"/>
+	<feature name="http://api.phonegap.com/1.0/notification"/>
+	<feature name="http://api.phonegap.com/1.0/contacts"/-->
     <plugins>
         <plugin name="File" value="CDVFile" />
          <plugin name="Camera" value="CDVCamera" />
+        <plugin name="FileTransfer" value="CDVFileTransfer" />
+        <plugin name="Media" value="CDVSound" />
+        <plugin name="Capture" value="CDVCapture" />
        <!--plugin name="Device" value="CDVDevice" />
         <plugin name="Logger" value="CDVLogger" />
         <plugin name="NetworkStatus" value="CDVConnection" />
         <plugin name="Debug Console" value="CDVDebugConsole" />
         <plugin name="Echo" value="CDVEcho" />
-        <plugin name="FileTransfer" value="CDVFileTransfer" />
-        <plugin name="Media" value="CDVSound" />
-        <plugin name="Capture" value="CDVCapture" />
         <plugin name="SplashScreen" value="CDVSplashScreen" />
         <plugin name="Battery" value="CDVBattery" />
         <plugin name="Globalization" value="CDVGlobalization" /-->
@@ -72,10 +88,13 @@
     
     <icon src="res/icon/ios/icon-57.png"            gap:platform="ios"        width="57" height="57" />
     <icon src="res/icon/ios/icon-72.png"            gap:platform="ios"        width="72" height="72" />
+    <icon src="res/icon/ios/icon-76.png"            gap:platform="ios"        width="76" height="76" />
     <icon src="res/icon/ios/icon-57-2x.png"         gap:platform="ios"        width="114" height="114" />
+    <icon src="res/icon/ios/icon-120.png"         gap:platform="ios"        width="120" height="120" />
     <icon src="res/icon/ios/icon-72-2x.png"         gap:platform="ios"        width="144" height="144" />
+    <icon src="res/icon/ios/icon-152.png"         gap:platform="ios"        width="152" height="152" />
     
-    <!--gap:splash src="res/screen/android/screen-ldpi-portrait.png"  gap:platform="android" gap:density="ldpi" />
+    <gap:splash src="res/screen/android/screen-ldpi-portrait.png"  gap:platform="android" gap:density="ldpi" />
     <gap:splash src="res/screen/android/screen-mdpi-portrait.png"  gap:platform="android" gap:density="mdpi" />
     <gap:splash src="res/screen/android/screen-hdpi-portrait.png"  gap:platform="android" gap:density="hdpi" />
     <gap:splash src="res/screen/android/screen-xhdpi-portrait.png" gap:platform="android" gap:density="xhdpi" />
@@ -84,9 +103,11 @@
     <gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png" gap:platform="ios"     width="640" height="960" />
     <gap:splash src="res/screen/ios/screen-iphone-landscape.png"    gap:platform="ios"     width="470" height="320" />
     <gap:splash src="res/screen/ios/screen-iphone-landscape-2x.png" gap:platform="ios"     width="960" height="720" />
+    <gap:splash src="res/screen/ios/screen-568h@2x.png"    gap:platform="ios"     width="640" height="1136" />
+    <gap:splash src="res/screen/ios/screen-iphone5-landscape.png" gap:platform="ios"     width="1136" height="640" />
     <gap:splash src="res/screen/ios/screen-ipad-portrait.png"      gap:platform="ios"     width="768" height="1024" />
     <gap:splash src="res/screen/ios/screen-ipad-portrait-2x.png"      gap:platform="ios"     width="1536" height="2008" />
     <gap:splash src="res/screen/ios/screen-ipad-landscape.png"     gap:platform="ios"     width="1024" height="768" />
-    <gap:splash src="res/screen/ios/screen-ipad-landscape-2x.png"     gap:platform="ios"     width="2048" height="1496" /-->
+    <gap:splash src="res/screen/ios/screen-ipad-landscape-2x.png"     gap:platform="ios"     width="2048" height="1496" />
     
 </widget>
