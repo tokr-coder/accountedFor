@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phone Gap</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
@@ -71,10 +72,10 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="sig_outter">
+            <div class="sig_outter"> 
                 <label>I Agree:</label>
-                <input type="button" name="submit" value="Signature" onclick="add_signature();" class="sig_button" />
-            </div>
+                 <input type="reset" name="submit" value="Signature" onclick="add_signature();" class="sig_button" />
+            </div> 
             <div class="clear"></div>
             <div class="text_form_outter_v">
                 <p></p>
@@ -111,7 +112,7 @@
                         </div>
 
                         <div class="pay_outter">
-                            <input type="submit" id = "PayInVisitor" name="submit" value="Pay" class="pay_button" onClick="payPressed()" />
+                            <input type="button" id = "PayInVisitor" name="submit" value="Pay" class="pay_button" onClick="payPressed();" />
                         </div>
 
                     </div>
@@ -148,29 +149,48 @@
         </div>
     </div>
     
-    <script src="js/jquery.min.js"></script>
-     <script type="text/javascript" src="js/index.js"></script>
+   
+    
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.autocomplete.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/visitor.js"></script>
     <script src="js/jSignature.min.js"></script>
     <script>
+          
+          $(function(){
+
+           $('#visitorFirstName').keyup(function(e){
+
+                      if($("#visitorFirstName").val().length <= 1){
+                        $('#visitorEmail').val("");
+                        $('#company').val("");
+                        $('#visitorPhoneNumber').val("");
+                     }
+                });
+
+            });
+
         function add_signature()
         {
             $("#signature").show();
             $("#sig_area").jSignature();
         }
+        
         $(document).ready(function() {
                           $("#signature").jSignature();
+                          
                           $("#img_close").click(function () {
-                                                $("#signature").jSignature('reset');
-                                                $("#signature").hide();
-                                                });
-                          }
-                          )
-        $("#img_Done").click(function () {
                               $("#signature").jSignature('reset');
                               $("#signature").hide();
-                              });
-        
+                          });
+        });
+
+        $("#img_Done").click(function () {
+              $("#signature").jSignature('reset');
+              $("#signature").hide();
+              });
+
         </script>
 </body>
 </html>

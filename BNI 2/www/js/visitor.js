@@ -1,4 +1,5 @@
 var payByMemberBalance;
+var arrayVisitor = [];
 
 $(document).ready(function() {
                   $('input[type="submit"]').attr('disabled','disabled');
@@ -47,10 +48,46 @@ function onBodyLoadVisitor(){
         document.getElementById('radio_paidBy').disabled = false;
     }else{
         document.getElementById('radio_paidBy').disabled = true;
-		$('#radio_paidBy, #paymentByMember').parent().hide();
-		
+		$('#radio_paidBy').parent().hide();
     }
 
+    ListVisitors();
+}
+
+
+function ListVisitors(){
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(transaction) {
+      
+      var sql = 'SELECT name, COUNT(name) as numberVisit, email, company, phone, signature, meetingdate FROM Visitors GROUP By name ORDER BY name ASC';
+        transaction.executeSql(sql, [],function(transaction, result) {
+                    if (result != null && result.rows != null) {
+                        for (var i = 0; i < result.rows.length; i++) {
+                            var row = result.rows.item(i);
+                            var name = row.name;
+                            var email = row.email;
+                            var phone = row.phone;
+                            var company = row.company;
+                            arrayVisitor.push({"value" : name, "email" : email, "phone" : phone, "company" : company});
+                        }
+                    eventAutocomplete();
+                    }
+                },errorHandler);
+            },errorHandler,nullHandler);
+    return;
+}
+
+function eventAutocomplete(){
+
+    $('#visitorFirstName').autocomplete({
+      lookup: arrayVisitor,
+      minChars: 3,
+      onSelect: function (suggestion) {
+        $('#visitorEmail').val(suggestion.email);
+        $('#company').val(suggestion.company);
+        $('#visitorPhoneNumber').val(suggestion.phone);
+      }
+    });
 }
 
 function ClearPressed() {
@@ -109,7 +146,6 @@ function payPressed(){
         if(paybymemberId == "" && !(document.getElementById('radio_cash').checked)&& !(document.getElementById('radio_cheque').checked)){
             alert("Select a Payment Method");
         }else{
-            
         
           if(paybymemberId == "") {
             
@@ -146,8 +182,9 @@ function payPressed(){
               }
             
             var name = $('#visitorFirstName').val();
-            var email = $('#visitorEmail').val()
-			var company = $('#company').val()
+            var email = $('#visitorEmail').val();
+			      var company = $('#company').val();
+            var visitorPhoneNumber = $('#visitorPhoneNumber').val();
 			
             var vistor = 1;
             
@@ -175,13 +212,18 @@ function payPressed(){
              alert(action);
              alert(balanceForVisitor);
              alert(payBy);*/
-            
             if (!window.openDatabase) {
                 alert('Databases are not supported in this browser.');
                 return;
             }
             
             db = openDatabase(shortName, version, displayName,maxSize);
+            db.transaction(function(transaction){
+              transaction.executeSql('INSERT INTO Visitors(name, email, phone, company, signature, meetingdate) VALUES(?,?,?,?,?,?)',
+              [name,email,visitorPhoneNumber,company,'',my_date],successAddVisitor(name),errorHandler);
+            });
+            
+
             db.transaction(function(transaction) {
 				transaction.executeSql(
 					'INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',
@@ -189,6 +231,7 @@ function payPressed(){
 					saveReceipt(name,email,company,meetingFee,my_date,payBy),
 					errorHandler);
 			});
+
         }else{
             fetchPayByMemberDetails();
         }
@@ -196,6 +239,11 @@ function payPressed(){
     }
    
 }
+  
+  function successAddVisitor(name){
+      console.log("save the visitor "+name);
+  }
+
 function saveReceipt(name,email,company,meetingFee,my_date,payBy){
 	db.transaction(function(transaction) {
 		transaction.executeSql('INSERT INTO Receipts(name,email,company,amount,meetingdate,paymentmethod,sent) VALUES (?,?,?,?,?,?,?)',
@@ -333,6 +381,8 @@ function paymentSuccessForMember (tx, resultset){
     return false;
 
 }
+
+
 
 
 
