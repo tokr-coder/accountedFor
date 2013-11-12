@@ -39,7 +39,7 @@ function onDeviceReady()
         }
         db = openDatabase(shortName, version, displayName,maxSize);
         db.transaction(function(tx){
-                       tx.executeSql('CREATE TABLE IF NOT EXISTS Members(member_id INTEGER NOT NULL PRIMARY KEY, member_firstname TEXT NOT NULL, member_lastname TEXT NOT NULL, member_email TEXT NOT NULL, member_phonenumber TEXT NOT NULL, member_company TEXT NOT NULL, member_balance INTEGER NOT NULL, member_checkintime TEXT NOT NULL, member_active INTEGER NOT NULL)',
+                       tx.executeSql('CREATE TABLE IF NOT EXISTS Members(member_id INTEGER NOT NULL PRIMARY KEY, member_firstname TEXT NOT NULL, member_lastname TEXT NOT NULL, member_email TEXT NOT NULL, member_phonenumber TEXT NOT NULL, member_company TEXT NOT NULL, member_balance REAL NOT NULL, member_checkintime TEXT NOT NULL, member_active INTEGER NOT NULL)',
                                  [],nullHandler,errorHandler);
                     },errorHandler,CreateLogTable);    
 }
@@ -78,7 +78,7 @@ function CreateVisitorTable(){
     }
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(tx){
-                   tx.executeSql('CREATE TABLE IF NOT EXISTS Visitors(name VARCHAR(255), email TEXT NOT NULL, phone TEXT, company TEXT, signature INTEGER, meetingdate long NOT NULL)',
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS Visitors(name VARCHAR(255) NOT NULL PRIMARY KEY, email TEXT NOT NULL, phone TEXT, company TEXT, signature INTEGER, meetingdate long NOT NULL, numberVisits INTEGER, idMember INTEGER)',
                              [],nullHandler,errorHandler);
                 },errorHandler,ListAllMembers);     
 }

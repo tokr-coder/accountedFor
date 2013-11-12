@@ -1,3 +1,4 @@
+var monthsAgo = 6;
 
 function onBodyVisitorReport(){
     
@@ -14,7 +15,7 @@ function listVisitorTable() {
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
 
-      var sql = 'SELECT name, COUNT(name) as numberVisit, email, company, phone, signature, meetingdate FROM Visitors WHERE meetingdate >('+dateSixMonthsAgo(6)+') GROUP By name ORDER BY numberVisit DESC';
+      var sql = 'SELECT * FROM Visitors WHERE meetingdate >('+dateTimeAgo(monthsAgo)+') ORDER BY numberVisits DESC';
       
         transaction.executeSql(sql, [],function(transaction, result) {
                     if (result != null && result.rows != null) {
@@ -27,7 +28,7 @@ function listVisitorTable() {
                                var company =row.company;
                                var signature =row.signature;
                                var meetingdate =row.meetingdate;
-                               var numberVisit = row.numberVisit;
+                               var numberVisit = row.numberVisits;
                                if(company.length == 0)
                                 company = '-';
                                if(phone.length == 0)
@@ -42,30 +43,40 @@ function listVisitorTable() {
     
 }
 
-function dateSixMonthsAgo(months){
+function dateTimeAgo(months){
 
   var date = new Date();
-        var  y = date.getFullYear();
-        var  m = date.getMonth();
-        var  d = date.getDate();
-        
-        m=m+1;
-        if(d<10)
-           d = "0"+d; 
-        if(m<10)
-         m="0"+m;
+  var  y = date.getFullYear();
+  var  m = date.getMonth();
+  var  d = date.getDate();
 
-       m = m - months;
-       if(m<0){
+  m=m+1;
+  if(d<10)
+     d = "0"+d; 
+  if(m<10)
+   m="0"+m;
+  
+  if(months == 12)
+  {
+    y = y -1;
+  }
+  else
+    if(months < 12)
+    {
+
+      m = m - months;
+      if(m<0){
         m = 12 - m;
         y = y -1;
-       }
-       if(m<10)
-         m="0"+m;
+      }
+      if(m<10)
+        m="0"+m;
+    }      
+        
 
-      var sixMonthsAgo= d+"/"+m+"/"+y; 
-      console.log("date sixMonthsAgo"+ sixMonthsAgo);
+      var timeAgo= d+"/"+m+"/"+y; 
+      console.log("date "+months+"Ago"+ timeAgo);
                 
-      return sixMonthsAgo;
+      return timeAgo;
 
 }
