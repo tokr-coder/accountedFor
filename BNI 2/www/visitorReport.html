@@ -8,7 +8,7 @@
 </head>
     
     
-<body onload="onBodyLog()">
+<body onload="onBodyVisitorReport()">
 
     <div class="top_bar">
         <a href="settings.html"><div class="back">Back</div></a>
@@ -18,19 +18,19 @@
 
     <div class="main">
         <div class="heading">
-            <img src="images/doller.png"/>
-            <p>Balance</p>
+            <img src="images/visitor.png" />
+            <p>Visitor Report</p>
         </div>
         
-        <div class="member_outter" id = "member_outter_Id">
-            <div class="summary1" id="MemberList">
+        <div class="log_outter">
+            <div class="summary_l" id="VisitorList">
                 <ul>
-                    <li  class="wid1">sl</li>
-                    <li li class="wid2">Member Name</li>
-                    <li class="wid2" style="border-right:none;">Balance</li>
-                    <li class="li_bold wid04" style="border-right:none;">&nbsp;</li>
+                    <li class="li_bold_l wid1_6">Name Visitor</li>
+                    <li class="li_bold_l wid1_6">Email</li>
+                    <li class="li_bold_l wid1_5">Company</li>
+                    <li class="li_bold_l wid1_6">Phone</li>
+                    <li class="li_bold_l wid1_l">No. Visits</li>
                 </ul>
-                
             </div>
         </div>
         
@@ -64,6 +64,6 @@
 
     <script src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/balanceless.js"></script>
+    <script type="text/javascript" src="js/visitorReport.js"></script>
     </body>
 </html>

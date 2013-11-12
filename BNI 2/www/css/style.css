@@ -913,8 +913,9 @@ border:solid 1px #dadada;
 .size_list_bg
 {width:145px; height:auto; padding:3px 0 3px 3px; border:none;
  color:#000000; font:normal 12px "Arial"; float:left; margin:0 0 0 0px; outline:none;
+}
 
- }
+
 
 
 /* settings */
@@ -1346,7 +1347,11 @@ border:solid 1px #dadada;
 {width:98.7%; height:auto; padding:6px 0 6px 0px; border:none;
  color:#969696; font:normal 12px "Arial";  outline:none;}
 
-
+.size_list_bg_v
+{width:98.7%; height:auto; padding:6px 0 6px 0px; border:none;
+ color:#969696; font:normal 12px "Arial";  outline:none;
+ background: #EDEDED;
+}
 
 
 
@@ -1515,7 +1520,7 @@ text-shadow: 1px 1px #FFFFFF;
 
 
 .save_outter_sr
-{ min-width:150px; height:58px; float:left; margin:0 15px 0 0;}
+{ width:150px; height:58px; float:left; margin:0 15px 0 0;}
 
 .save_button_sr
 { width:150px; height:58px;
@@ -2378,7 +2383,7 @@ text-shadow: 1px 1px #FFFFFF;
 
 
 .save_outter
-{ min-width:150px; height:58px; float:right; margin:0 15px;}
+{ width:150px; height:58px; float:right;}
 
 .save_button
 { width:150px; height:58px;
@@ -2932,7 +2937,7 @@ text-shadow: 1px 1px #FFFFFF;
 /* body page */
 
 body
-{ background:url(../images/bg.jpg )repeat; background-attachment:scroll;}
+{ background:url(../images/bg.jpg )repeat; background-attachment:fixed;}
 
 /* top bar */
 
@@ -4015,5 +4020,11 @@ border:solid 1px #dadada;
 { width:100px; height:50px; }
 .late
 {color:red;}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
+.autocomplete-suggestion { padding: 10px 5px; font-size: 1.2em; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #f0f0f0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+
 /*}*/
 

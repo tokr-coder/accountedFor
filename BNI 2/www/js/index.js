@@ -5,7 +5,7 @@ var version = '1.0';
 var displayName = 'BNISqlDB';
 var maxSize = 65535;
 var meetingFee;
-var debug = false;
+var debug = true;
 
 // this is called when an error happens in a transaction
 function errorHandler(transaction, error) {
@@ -39,7 +39,7 @@ function onDeviceReady()
         }
         db = openDatabase(shortName, version, displayName,maxSize);
         db.transaction(function(tx){
-                       tx.executeSql('CREATE TABLE IF NOT EXISTS Members(member_id INTEGER NOT NULL PRIMARY KEY, member_firstname TEXT NOT NULL, member_lastname TEXT NOT NULL, member_email TEXT NOT NULL, member_phonenumber TEXT NOT NULL, member_company TEXT NOT NULL, member_balance INTEGER NOT NULL, member_checkintime TEXT NOT NULL, member_active INTEGER NOT NULL)',
+                       tx.executeSql('CREATE TABLE IF NOT EXISTS Members(member_id INTEGER NOT NULL PRIMARY KEY, member_firstname TEXT NOT NULL, member_lastname TEXT NOT NULL, member_email TEXT NOT NULL, member_phonenumber TEXT NOT NULL, member_company TEXT NOT NULL, member_balance REAL NOT NULL, member_checkintime TEXT NOT NULL, member_active INTEGER NOT NULL)',
                                  [],nullHandler,errorHandler);
                     },errorHandler,CreateLogTable);    
 }
@@ -67,7 +67,20 @@ function CreateReceiptTable() {
 	db.transaction(function(tx){
 				   tx.executeSql('CREATE TABLE IF NOT EXISTS Receipts(id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT NOT NULL, amount INTEGER NOT NULL, meetingdate TEXT NOT NULL, paymentmethod TEXT NOT NULL, sent BIT NOT NULL)',
 							 [],nullHandler,errorHandler);
-				},errorHandler,ListAllMembers);					
+				},errorHandler,CreateVisitorTable);					
+}
+
+function CreateVisitorTable(){
+
+    if (!window.openDatabase) {
+        alert('Databases are not supported in this browser.');
+        return;
+    }
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(tx){
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS Visitors(name VARCHAR(255) NOT NULL PRIMARY KEY, email TEXT NOT NULL, phone TEXT, company TEXT, signature INTEGER, meetingdate long NOT NULL, numberVisits INTEGER, idMember INTEGER)',
+                             [],nullHandler,errorHandler);
+                },errorHandler,ListAllMembers);     
 }
 
 function ListAllMembers() {

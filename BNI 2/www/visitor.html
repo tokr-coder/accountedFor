@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phone Gap</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
@@ -34,7 +35,31 @@
 
         <div class="visitors_outter">
             <div class="text_form_outter_v">
-                <p>First Name <span>*</span></p>
+                <p></p>
+                <div class="form_txt_v">
+                    <div class="radio_outter">
+                        <div class="radio"><label>Visitor &nbsp;&nbsp;&nbsp;&nbsp;  </label>
+                            <input type="radio" id="radio_visitor" name="visitor" value="visitor" style="width:25px; height:25px;"/>
+                        </div>
+                        <div class="radio"><label>Substitute &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <input type="radio" id="radio_substitute" name="visitor" value="substitute" style="width:25px; height:25px;"/>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+              
+
+            <div class="text_form_outter_v">
+                <p id="tipoVisitor">Visitor invited by<span>*</span></p>
+                <div class="form_txt_v">
+                    <div class="form_txt_bg_v">
+                    <select id="members" name="members" class="size_list_bg_v"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text_form_outter_v">
+                <p>Name<span>*</span></p>
                 <div class="form_txt_v">
                     <input id="visitorFirstName" type="text" placeholder="Full Name" class="form_txt_bg_v">
                 </div>
@@ -71,10 +96,10 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="sig_outter">
+            <div class="sig_outter"> 
                 <label>I Agree:</label>
-                <input type="button" name="submit" value="Signature" onclick="add_signature();" class="sig_button" />
-            </div>
+                 <input type="reset" name="submit" value="Signature" onclick="add_signature();" class="sig_button" />
+            </div> 
             <div class="clear"></div>
             <div class="text_form_outter_v">
                 <p></p>
@@ -111,7 +136,7 @@
                         </div>
 
                         <div class="pay_outter">
-                            <input type="submit" id = "PayInVisitor" name="submit" value="Pay" class="pay_button" onClick="payPressed()" />
+                            <input type="button" id = "PayInVisitor" name="submit" value="Pay/Sign-in" class="pay_button" onClick="payPressed();" />
                         </div>
 
                     </div>
@@ -148,29 +173,96 @@
         </div>
     </div>
     
-    <script src="js/jquery.min.js"></script>
-     <script type="text/javascript" src="js/index.js"></script>
+   
+    
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.autocomplete.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/visitor.js"></script>
     <script src="js/jSignature.min.js"></script>
     <script>
+          
+          $(function(){
+
+           $('#visitorFirstName').keyup(function(e){
+
+                      if($("#visitorFirstName").val().length <= 1){
+                        $('#visitorEmail').val("");
+                        $('#company').val("");
+                        $('#visitorPhoneNumber').val("");
+                     }
+                });
+
+            });
+
         function add_signature()
         {
             $("#signature").show();
             $("#sig_area").jSignature();
         }
+        
         $(document).ready(function() {
                           $("#signature").jSignature();
+                          
                           $("#img_close").click(function () {
-                                                $("#signature").jSignature('reset');
-                                                $("#signature").hide();
-                                                });
-                          }
-                          )
-        $("#img_Done").click(function () {
                               $("#signature").jSignature('reset');
                               $("#signature").hide();
-                              });
-        
+                          });
+        });
+
+        $("#img_Done").click(function () {
+              $("#signature").jSignature('reset');
+              $("#signature").hide();
+              });
+
+        $('input[id=radio_visitor]').click(function() {
+            
+            typeVisitor = 'visitor';
+            document.getElementById('radio_cash').disabled = false;
+            document.getElementById('radio_cheque').disabled = false;
+            document.getElementById('radio_paidBy').disabled = true;
+            document.getElementById('paymentByMember').disabled = true;
+            $('#tipoVisitor').html('Visitor invited by:<span>*</span>');
+            $("#members option").remove();
+            $("#members").append("<option value='0'>None</option>");
+            loadMemberList();
+            
+
+            //alert($('input[id=radio_visitor]:checked').val());
+        });
+
+        $('input[id=radio_substitute]').click(function() {
+             
+            typeVisitor = 'substitute';
+            document.getElementById('radio_cash').disabled = true;
+            document.getElementById('radio_cheque').disabled = true;
+            document.getElementById('radio_paidBy').disabled = true;
+            $('#tipoVisitor').html('Substitute for:<span>*</span>');
+            $("#members option").remove();
+            loadMemberList();
+            
+            // document.getElementById('radio_paidBy').disabled = false;
+
+             //alert($('input[id=radio_substitute]:checked').val());
+        });
+
+        $('#members').on('change',function(event){
+
+            if(typeVisitor == 'visitor'){
+                if($('#members').val() == 0){
+                   document.getElementById('radio_paidBy').disabled = true;
+                   document.getElementById('paymentByMember').disabled = true;
+                }else{
+
+                   document.getElementById('radio_paidBy').disabled = false;
+                   document.getElementById('paymentByMember').disabled = false;
+                }
+            }
+            //console.log("cambio la lista de miembros");
+            //console.log("valor "+$('#members').val());
+
+        });
+
         </script>
 </body>
 </html>
