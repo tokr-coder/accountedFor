@@ -256,6 +256,11 @@
 
                    document.getElementById('radio_paidBy').disabled = false;
                    document.getElementById('paymentByMember').disabled = false;
+                   $('#paymentByMember').val($('#members').val());
+                   $('#radio_paidBy').prop('checked', true);
+                   
+
+
                 }
             }
             //console.log("cambio la lista de miembros");
