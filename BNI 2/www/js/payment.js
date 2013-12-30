@@ -3,7 +3,7 @@
 var selectedMemberId;
 var balance;
 var fromlink;
-var fullName, member_email, member_company;
+var fullName, member_email, member_company, meetingFeeInPay;
 
 $(document).ready(function() {
                   $('input[type="number"]').keyup(function() {
@@ -18,9 +18,33 @@ $(document).ready(function() {
 function onBodyLoadPayment(){
     selectedMemberId =getDetailsFromUrl()["id"];
     fromlink = getDetailsFromUrl()["fromlink"];
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(transaction) {  
+
+      var sql = 'SELECT * FROM Settings';
+      
+        transaction.executeSql(sql, [],function(transaction, result) {
+                    if (result.rows.length > 0) {
+                        for (var i = 0; i < result.rows.length; i++) {
+                               var row = result.rows.item(i);
+                               meetingFeeInPay = row.meetingFee;
+                               if(fromlink == "ok"){
+                                    document.getElementById("paymentAmount").value = '';
+                               }else{
+                                    document.getElementById("paymentAmount").value =meetingFeeInPay ;
+                                    $('input[type="button"]').removeAttr('disabled');
+                               }
+
+                               db.transaction(fetchMemberDetails,errorHandler,nullHandler);
+                               
+                        }
+                    }
+                },errorHandler);
+            },errorHandler,nullHandler);
+
     //alert(fromlink);
     //alert(meetingFee);
-    var meetingFeeInPay = window.localStorage.getItem("meetingFee");
+    /*meetingFeeInPay = window.localStorage.getItem("meetingFee");
     if(fromlink == "ok"){
         document.getElementById("paymentAmount").value = '';
     }else{
@@ -32,7 +56,7 @@ function onBodyLoadPayment(){
         return;
     }
     db = openDatabase(shortName, version, displayName,maxSize);
-    db.transaction(fetchMemberDetails,errorHandler,nullHandler);
+    db.transaction(fetchMemberDetails,errorHandler,nullHandler);*/
 }
 
 function fetchMemberDetails(tx) {
@@ -71,7 +95,7 @@ function paymentPressedInPayment() {
         alert("Enter Amount !");
     }else{
         var newBalance ;
-        meetingFee = window.localStorage.getItem("meetingFee");
+        //meetingFee = window.localStorage.getItem("meetingFee");
         
         if(fromlink == "ok") {
             newBalance =parseFloat(balance) + parseFloat(valueEntered);
@@ -85,8 +109,8 @@ function paymentPressedInPayment() {
         }else {
             
             var intermediateProcess = parseFloat(balance) + parseFloat(valueEntered);
-            newBalance = parseFloat(balance) + parseFloat(valueEntered) - parseFloat(meetingFee);
-            
+            newBalance = parseFloat(balance) + parseFloat(valueEntered) - parseFloat(meetingFeeInPay);
+
             var datetime = getdate() + " " + gettime();
             var active = 1;
             
@@ -99,9 +123,11 @@ function paymentPressedInPayment() {
                 alert('Databases are not supported in this browser.');
                 return;
             }
+            
             db.transaction(function(transaction) {
                            transaction.executeSql('UPDATE Members SET member_balance=? , member_checkintime=? , member_active=?where member_id = ?', [newBalance,datetime,active,selectedMemberId],  addToLog1(valueEntered,newBalance,selectedMemberId,intermediateProcess), errorCB);
                            },errorHandler,nullHandler);
+            
         }
 
     }
@@ -130,6 +156,7 @@ function addToLog1(valueEntered,newBalance,selectedMemberId,intermediateProcess)
         alert('Databases are not supported in this browser.');
         return;
     }
+    
     
     db = openDatabase(shortName, version, displayName,maxSize);
 	db.transaction(function(transaction) {
@@ -194,7 +221,7 @@ function addToLog2(valueEntered,newBalance,selectedMemberId) {
     var my_date = getdate();
     var my_time = gettime();
 
-    var meetingFeeInPay = window.localStorage.getItem("meetingFee");
+    //var meetingFeeInPay = window.localStorage.getItem("meetingFee");
     var vistor = 0;
     var action = "SignIn -$"+meetingFeeInPay;
     

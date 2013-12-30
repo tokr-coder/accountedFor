@@ -6,6 +6,9 @@ var displayName = 'BNISqlDB';
 var maxSize = 65535;
 var meetingFee;
 var debug = true;
+var iconImg= 'images/accountedforicon.png';
+var emailSetting = 'bni@bni.com';
+var meetingTime;
 
 // this is called when an error happens in a transaction
 function errorHandler(transaction, error) {
@@ -30,9 +33,6 @@ function onDeviceReady()
 {
     
     //alert("DEBUGGING: we are in the onBodyLoad() function");
-    
-    
-    
         if (!window.openDatabase) {
             alert('Databases are not supported in this browser.');
             return;
@@ -80,19 +80,116 @@ function CreateVisitorTable(){
     db.transaction(function(tx){
                    tx.executeSql('CREATE TABLE IF NOT EXISTS Visitors(name VARCHAR(255) NOT NULL PRIMARY KEY, email TEXT NOT NULL, phone TEXT, company TEXT, signature INTEGER, meetingdate long NOT NULL, numberVisits INTEGER, idMember INTEGER)',
                              [],nullHandler,errorHandler);
-                },errorHandler,ListAllMembers);     
+                },errorHandler,CreateSettingsTable);     
 }
+
+
+
+function CreateSettingsTable(){
+
+    if (!window.openDatabase) {
+        alert('Databases are not supported in this browser.');
+        return;
+    }
+
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(tx){
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS Settings(setting_id INTEGER PRIMARY KEY, nameGroup TEXT NOT NULL, meetingFee TEXT NOT NULL, meetingTime TEXT NOT NULL, meetingPayForVisitor boolean, meetingRequireSig boolean, imageURI TEXT, email TEXT)',
+                             [],nullHandler,errorHandler);
+                },errorHandler,ListAllMembers);     
+
+}
+
+
 
 function ListAllMembers() {
    // alert("List Members");
-    meetingFee = window.localStorage.getItem("meetingFee");
+    var sql = 'SELECT * FROM Settings';
+        db = openDatabase(shortName, version, displayName,maxSize);
+        db.transaction(function(transaction) {  
+            transaction.executeSql(sql, [],function(transaction, result) {
+                        if (result.rows.length == 0) {
+                            var largeImage = document.getElementById('largeImage');
+                            var welcome = window.localStorage.getItem("showWelcomeScreen");
+                            if (welcome == null) {
+                                largeImage.src = iconImg;
+                                window.localStorage.setItem("showWelcomeScreen", "0");
+                                window.location.href = "help.html";
+                            }else{
+                                document.getElementById("GroupNameDiv").innerHTML = "Group Name";
+                                largeImage.src = "";
+                                alert("Enter meeting details in the Administration tab !!");
+
+                            }
+                        }else{
+                            console.log("Si hay registros  para settigsS cantidad"+result.rows.length);
+                            for (var i = 0; i < result.rows.length; i++) {
+                                 var row = result.rows.item(0);
+                                 if (window.localStorage.getItem("isMeetingStarted")!='1') document.getElementById("meeting_status").innerHTML = "- Meeting not started";
+                                 var largeImage = document.getElementById('largeImage');
+                                 console.log("url imagen "+row.imageURI+ "id de la fila es "+row.setting_idf);
+                                 largeImage.src = row.imageURI;
+                                 document.getElementById("GroupNameDiv").innerHTML=row.nameGroup;
+                                 meetingTime = row.meetingTime;
+                            }
+
+                                db.transaction(function(transaction) {
+                                transaction.executeSql('SELECT * FROM Members ORDER BY member_firstname;', [],function(transaction, results) {
+                                if (results != null && result.rows != null) {
+                                    //alert(result.rows.length);
+                                    for (var i = 0; i < results.rows.length; i++) {
+                                        var rowMember = results.rows.item(i);
+                                        var fname = rowMember.member_firstname;
+                                        var lname = rowMember.member_lastname;
+                                        var names = [fname, lname];
+                                        var fullName = names.join(' ');
+                                        var html; 
+                                        var activeOrNot =rowMember.member_active;
+                                        var disabled = '';
+                                        if (window.localStorage.getItem("isMeetingStarted")=='0') disabled = 'disabled';
+                                              
+                                        if(activeOrNot==1){
+                                              var htmlRow = '<ul><li class="wid1"';
+                                              if(IsLate(rowMember.member_checkintime, meetingTime)){htmlRow += ' style="color:red;"';}
+                                              htmlRow += '>'+ fullName +'</li><li class="wid2 sign'+ rowMember.member_id +'">'+ rowMember.member_checkintime +'</li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'">Paid</a></li></ul>';
+                                              $('#MemberList').append(htmlRow);
+                                              
+                                        }else{
+                                              
+                                              if(rowMember.member_balance >= meetingFee) {
+                                                    html = '<ul><li class="wid1">'+ fullName +'</li><li class="wid2 sign'+ rowMember.member_id +'"><input ';
+                                                    if (disabled == '') html += 'onClick="signInPressed((this.id))" ';
+                                                    html += 'type="button" class="login" value="Sign in" id="'+rowMember.member_id+'" '+disabled+'/></li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'">Pre Paid</a></li></ul>';
+                                                    $('#MemberList').append(html);
+                                              
+                                              }else {
+                                                    html = '<ul><li class="wid1">'+ fullName +'</li><li class="wid2"><a class="fee'+ rowMember.member_id +'" ';
+                                                    if (disabled == '') html += 'href="payment.html?fromlink=no&id=' +rowMember.member_id+'"';
+                                                    html += '><input type="button" class="login_pay" value="Pay &amp; Sign In" '+disabled+'/></a></li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: red;" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'">Payment needed</a></li></ul>';
+                                                    $('#MemberList').append(html);
+                                              }
+                                              
+                                        }
+                                    }
+                                //
+
+
+                                }
+                            },errorHandler);
+                            },errorHandler,nullHandler);
+
+                        }
+                    },errorHandler);
+                },errorHandler,nullHandler);
+
+    /*meetingFee = window.localStorage.getItem("meetingFee");
     var groupName=  window.localStorage.getItem("groupName");
     var meetingTime = window.localStorage.getItem("meetingTime");
     var imageURI = window.localStorage.getItem("imageLocation");
-    var welcome = window.localStorage.getItem("showWelcomeScreen");
+    var welcome = window.localStorage.getItem("showWelcomeScreen");*/
 
     
-    document.getElementById("GroupNameDiv").innerHTML=groupName;
+    /*document.getElementById("GroupNameDiv").innerHTML=groupName;
     if (window.localStorage.getItem("isMeetingStarted")!='1') document.getElementById("meeting_status").innerHTML = "- Meeting not started";
     var largeImage = document.getElementById('largeImage');
     if(imageURI == null){
@@ -157,12 +254,14 @@ function ListAllMembers() {
                                           
                                     }
                                 }
-                                          
+                            //
+
+
                             }
                     },errorHandler);
             },errorHandler,nullHandler);
-    }
-    return;
+    } // aqui */
+    
 
 }
 
@@ -286,7 +385,7 @@ function addToLogAfterSignIn(fullName,newMemberBalance,clicked_id,datetime) {
      alert(payBy);*/
     $('a.fee'+ clicked_id).html('Paid');
 	$('li.sign' + clicked_id).html(my_date +' '+ my_time);
-	if(IsLate(datetime, window.localStorage.getItem("meetingTime"))){$('.sign'+clicked_id).css('color','red');}
+	if(IsLate(datetime, meetingTime)){$('.sign'+clicked_id).css('color','red');}
     if (!window.openDatabase) {
         alert('Databases are not supported in this browser.');
         return;

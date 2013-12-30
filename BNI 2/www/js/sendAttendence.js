@@ -5,13 +5,31 @@ var memberEmailToSendArray = new Array();
 var memberPhoneToSendArray = new Array();
 var memberBalanceToSendArray = new Array();
 var memberCheckInTimeToSendArray = new Array();
-var meetingTime;
+var meetingTime, emailSetupValue, groupName;
 
 
 function onBodyLoadSendAttendence(){
 
-    meetingTime = window.localStorage.getItem("meetingTime");
-    fillSelectOptionFromDatabase();
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(transaction) {  
+
+      var sql = 'SELECT * FROM Settings';
+      
+        transaction.executeSql(sql, [],function(transaction, result) {
+                    if (result.rows.length > 0) {
+                        for (var i = 0; i < result.rows.length; i++) {
+                               var row = result.rows.item(i);
+                               meetingTime = row.meetingTime;
+                               emailSetupValue = row.email;
+                               groupName = row.nameGroup;
+                               fillSelectOptionFromDatabase();
+                        }
+                    }
+                },errorHandler);
+            },errorHandler,nullHandler);
+
+    //meetingTime = window.localStorage.getItem("meetingTime");
+    //fillSelectOptionFromDatabase();
 }
 
 function cancelPressedInAttendence() {
@@ -101,13 +119,13 @@ function getDetailsFromDb (){
 }
 
 function sendMemberAttendenceAfterFetchingFromDb (){
-    var groupName=  window.localStorage.getItem("groupName");
-    var meetingTimeFromDB = window.localStorage.getItem("meetingTime");
+    //var groupName=  window.localStorage.getItem("groupName");
+    //var meetingTimeFromDB = window.localStorage.getItem("meetingTime");
 
-    var emailSetupValue = window.localStorage.getItem("emailSetupValue");
-    if(emailSetupValue == null) {
-        emailSetupValue = "bni@bni.com";
-    }
+    //var emailSetupValue = window.localStorage.getItem("emailSetupValue");
+    //if(emailSetupValue == null) {
+    //    emailSetupValue = "bni@bni.com";
+    //}
     
     /*alert("sendMemberSuccessAfterFetchingFromDb");
     alert(memberEmailToSend);
@@ -129,7 +147,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
      type: "POST",
      url: 'http://accountedfor.biz/send/attendence.php',
      dataType: 'json',
-     data: {"memberNameToSendArray":memberNameToSendArray , "memberEmailToSendArray":memberEmailToSendArray , "memberPhoneToSendArray":memberPhoneToSendArray ,"memberBalanceToSendArray":memberBalanceToSendArray ,"memberCheckInTimeToSendArray":memberCheckInTimeToSendArray, "email_to":memberEmailToSend , "meeting_date":meetingTimeFromDB ,"groupName":groupName , "emailSetupValue":emailSetupValue},
+     data: {"memberNameToSendArray":memberNameToSendArray , "memberEmailToSendArray":memberEmailToSendArray , "memberPhoneToSendArray":memberPhoneToSendArray ,"memberBalanceToSendArray":memberBalanceToSendArray ,"memberCheckInTimeToSendArray":memberCheckInTimeToSendArray, "email_to":memberEmailToSend , "meeting_date":meetingTime ,"groupName":groupName , "emailSetupValue":emailSetupValue},
      timeout: 5000,
      success: function(data, status){
              //alert(data.status);
