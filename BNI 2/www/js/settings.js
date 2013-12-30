@@ -362,7 +362,8 @@ function setLogoClicked() {
 
 function getPhoto() {
     // Retrieve image file location from specified source
-    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,destinationType:  Camera.DestinationType.FILE_URI,sourceType: Camera.PictureSourceType.PHOTOLIBRARY });
+    console.log("getPhoto");
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, destinationType:Camera.DestinationType.FILE_URI, sourceType:Camera.PictureSourceType.PHOTOLIBRARY });
 }
 
 // Called if something bad happens.
@@ -371,22 +372,30 @@ function onFail(message) {
 }
 
 function onPhotoURISuccess(imageURI) {
-   //  alert(imageURI);
-    
-    window.localStorage.setItem("imageLocation", imageURI);
-    alert("Success");
+     
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(transaction) {
+        transaction.executeSql('UPDATE Settings SET imageURI=? where setting_id = ?', [imageURI, 1],function(){
+            alert("Success");
+        },errorCB);
+        },errorHandler,nullHandler);
+
+
+
+    //window.localStorage.setItem("imageLocation", imageURI);
+    //alert("Success");
     // Get image handle
     //
-    var largeImage = document.getElementById('largeImage');
+    //var largeImage = document.getElementById('largeImage');
     
     // Unhide image elements
     //
-    largeImage.style.display = 'block';
+    //largeImage.style.display = 'block';
     
     // Show the captured photo
     // The inline CSS rules are used to resize the image
     //
-    largeImage.src = imageURI;
+    //largeImage.src = imageURI;
 }
 
 function sendReciepsClicked()

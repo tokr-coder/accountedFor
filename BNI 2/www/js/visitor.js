@@ -27,7 +27,48 @@ $(document).ready(function() {
 
 function onBodyLoadVisitor(){
     
-    meetingFee = window.localStorage.getItem("meetingFee");
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(transaction) {  
+
+      var sql = 'SELECT * FROM Settings';
+      
+        transaction.executeSql(sql, [],function(transaction, result) {
+                    if (result.rows.length > 0) {
+                        for (var i = 0; i < result.rows.length; i++) {
+                               var row = result.rows.item(i);
+                               meetingFee = row.meetingFee;
+                               
+                               var meetingFeeInDoller = "$"+meetingFee;
+                               document.getElementById("MeetingFeeFromDb").innerHTML=document.getElementById("MeetingFeeFromDb").innerHTML+meetingFeeInDoller;
+                               fillPayByMemberFromDatabase();
+                               if (window.localStorage.getItem("isMeetingStarted")!='1'){
+                                  document.getElementById("meeting_status").innerHTML = "- Meeting not started";
+                                  $('input').attr('disabled','disabled');
+                               }
+                              
+                              if(row.meetingRequireSig == false ){
+                                  $('.privacy, .sig_outter').hide();
+                              }
+
+
+                              if(meetingPayForVisitor){
+                                  document.getElementById('radio_paidBy').disabled = false;
+                              }else{
+                                  document.getElementById('radio_paidBy').disabled = true;
+                              $('#radio_paidBy').parent().hide();
+                              }
+                              memberList();
+                              ListVisitors();
+                        }
+                    }
+                    else{
+                           alert("Enter meeting details in Administration tab !!");
+                        }
+                },errorHandler);
+            },errorHandler,nullHandler);
+
+
+    /*meetingFee = window.localStorage.getItem("meetingFee");
     
     if(meetingFee == null) {
         alert("Enter meeting details in Administration tab !!");
@@ -54,7 +95,7 @@ function onBodyLoadVisitor(){
 		$('#radio_paidBy').parent().hide();
     }
     memberList();
-    ListVisitors();
+    ListVisitors();*/
 }
 
 
