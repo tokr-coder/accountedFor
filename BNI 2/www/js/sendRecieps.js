@@ -21,9 +21,9 @@ var started = 0;
 
 function onBodyLoadRemoveMember(){
     if(!debug) $('.buttons_sr .options_outter_sr').hide();
-    meetingTime = window.localStorage.getItem("meetingTime");
+    //meetingTime = window.localStorage.getItem("meetingTime");
 	ReloadList()
-}
+}	
 
 function ReloadList(){
 	$('#List').html('<ul><li class="li_bold wid1">Name</li><li class="li_bold wid2">Meeting Date</li><li class="li_bold wid2" style="border-right:none;">Sent</li></ul>');
@@ -131,45 +131,65 @@ function sendReceiptsClicked(){
 }
 
 function sendMemberSuccessAfterFetchingFromDbToAll(){
-    var meetingStartedTimeForReceipts = window.localStorage.getItem("meetingStartedTimeForReceipts");
+      db = openDatabase(shortName, version, displayName,maxSize);
+      db.transaction(function(transaction) {  
+      var sql = 'SELECT * FROM Settings';
+        transaction.executeSql(sql, [],function(transaction, result) {
+                    if (result.rows.length > 0) {
+                        for (var i = 0; i < result.rows.length; i++) {
+                               var row = result.rows.item(i);
+                               var meetingStartedTimeForReceipts  = window.localStorage.getItem("meetingStartedTimeForReceipts");
+    						   var groupName=  row.nameGroup;
+                               var meetingTimeFromDB = row.meetingTime;
+                               var emailSetupValue = row.email;
+                                   $.ajax({
+							           type: "POST",
+							           url: 'http://accountedfor.biz/send/mail1.php',
+							           dataType: 'json',
+							           data: {"memberBalanceToSendArray":memberBalanceToSendArray, "memberEmailToSendArray":memberEmailToSendArray,"memberNameToSendArray":memberNameToSendArray,"paymentMethodToSendArray":paymentMethodToSendArray,"descriptionToSendArray":descriptionToSendArray,"meetingStartedTime":meetingStartedTimeForReceipts ,"meetingDateToSendArray":meetingDateToSendArray , "groupName":groupName , "emailSetupValue":emailSetupValue},
+							           timeout: 7000,
+							           success: function(data, status){
+											meetingDateToSendArray = [];
+							                memberBalanceToSendArray = [];
+							                memberEmailToSendArray = [];
+							                memberNameToSendArray = [];
+							                paymentMethodToSendArray = [];
+							                descriptionToSendArray = [];
+											db = openDatabase(shortName, version, displayName,maxSize);
+											db.transaction(function(tx) {
+												var sql="UPDATE Receipts SET sent = 1 WHERE id IN ("+ids.join()+")";
+												tx.executeSql(sql,null);
+											},errorHandler,nullHandler);
+											
+							                alert("Receipts Sent Successfully..");
+											ReloadList();
+							            },
+							           error: function(){
+											meetingDateToSendArray = [];
+							                memberBalanceToSendArray = [];
+							                memberEmailToSendArray = [];
+							                memberNameToSendArray = [];
+							                paymentMethodToSendArray = [];
+							                descriptionToSendArray = [];
+							                alert("Receipts not Sent ..");
+							                location.reload();     }
+							           });
+                        }
+                    }
+                },errorHandler);
+            },errorHandler,nullHandler);
+
+
+    /*var meetingStartedTimeForReceipts = window.localStorage.getItem("meetingStartedTimeForReceipts");
     var groupName=  window.localStorage.getItem("groupName");
     var meetingTimeFromDB = window.localStorage.getItem("meetingTime");
     var emailSetupValue = window.localStorage.getItem("emailSetupValue");
+
     if(emailSetupValue == null) {
         emailSetupValue = "bni@bni.com";
-    }
-    $.ajax({
-           type: "POST",
-           url: 'http://accountedfor.biz/send/mail1.php',
-           dataType: 'json',
-           data: {"memberBalanceToSendArray":memberBalanceToSendArray, "memberEmailToSendArray":memberEmailToSendArray,"memberNameToSendArray":memberNameToSendArray,"paymentMethodToSendArray":paymentMethodToSendArray,"descriptionToSendArray":descriptionToSendArray,"meetingStartedTime":meetingStartedTimeForReceipts ,"meetingDateToSendArray":meetingDateToSendArray , "groupName":groupName , "emailSetupValue":emailSetupValue},
-           timeout: 7000,
-           success: function(data, status){
-				meetingDateToSendArray = [];
-                memberBalanceToSendArray = [];
-                memberEmailToSendArray = [];
-                memberNameToSendArray = [];
-                paymentMethodToSendArray = [];
-                descriptionToSendArray = [];
-				db = openDatabase(shortName, version, displayName,maxSize);
-				db.transaction(function(tx) {
-					var sql="UPDATE Receipts SET sent = 1 WHERE id IN ("+ids.join()+")";
-					tx.executeSql(sql,null);
-				},errorHandler,nullHandler);
-				
-                alert("Receipts Sent Successfully..");
-				ReloadList();
-            },
-           error: function(){
-				meetingDateToSendArray = [];
-                memberBalanceToSendArray = [];
-                memberEmailToSendArray = [];
-                memberNameToSendArray = [];
-                paymentMethodToSendArray = [];
-                descriptionToSendArray = [];
-                alert("Receipts not Sent ..");
-                location.reload();     }
-           });
+    }*/
+
+
     
 }
 

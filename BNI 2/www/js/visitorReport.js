@@ -13,7 +13,7 @@ function listVisitorTable() {
     }
     
     db = openDatabase(shortName, version, displayName,maxSize);
-    db.transaction(function(transaction) {
+    db.transaction(function(transaction) {  
 
       var sql = 'SELECT * FROM Visitors WHERE meetingdate >('+dateTimeAgo(monthsAgo)+') ORDER BY numberVisits DESC';
       
