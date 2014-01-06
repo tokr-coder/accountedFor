@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Feedback</title>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+</head>
+    
+<body onload="">
+
+    <div class="top_bar">
+        <a href="settings.html"><div class="back">Back</div></a>
+        <div class="home_butt"><a href="index.html"><img src="images/home.png" /></a></div>
+    </div>
+
+
+    <div class="main">
+        <div class="heading">
+            <img src="images/add_member.png" />
+            <p><span id='title'>Feedback</span><span id='title_message'></span></p>
+        </div>
+
+        <div class="add_member_outter">
+            <div class="text_form_outter">
+                <p>Name <span>*</span></p>
+                <div class="form_txt">
+                    <input id="name" type="text" name="name" placeholder="Name" class="form_txt_bg">
+                </div>
+            </div>
+
+            <div class="text_form_outter">
+                <p>Email </p>
+                <div class="form_txt">
+                    <input id="email" type="email" name="email" placeholder="Email" class="form_txt_bg">
+                </div>
+            </div>
+
+            <div class="text_form_outter">
+                <p>Subject</p>
+                <div class="form_txt">
+                    <input id="subject" type="text" name="subject" placeholder="Subject" type="text" class="form_txt_bg">
+                </div>
+            </div>
+
+            <div class="text_form_outter">
+                <p>Message <span>*</span></p>
+                <div class="form_txt">
+                    <textarea id="message" name="message" placeholder="Message" class="form_txt_bg"></textarea>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+            
+            <div class="clear"></div>
+
+
+            <div class="text_form_outter">
+                <p></p>
+                <div class="form_txt">
+                    <div class="sub_outter">
+                        <input id="send" type="button" name="send" value="Send" class="submit_button"/>
+                    </div>
+                </div>
+            </div>
+			<br/>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="bottom_bar">
+        <div class="icons_outter">
+            <div class="tab">
+                <ul>
+                    <a href="index.html"><li>
+                        <img src="images/tab_member.png" />
+                        <p>Member</p>
+                    </li></a>
+
+
+
+                    <a href="visitor.html"><li>
+                        <img src="images/visitor.png" />
+                        <p>Visitors</p>
+                    </li></a>
+
+
+                    <a href="settings.html"><li style="border:none;">
+                        <img src="images/admin.png" />
+                        <p>Administration</p>
+                    </li></a>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+     <script src="js/jquery.min.js"></script>
+     <script src="js/mandrill.js"></script>
+     <script type="text/javascript" src="js/index.js"></script>
+     <script type="text/javascript" src="js/feedback.js"></script>
+</body>
+</html>

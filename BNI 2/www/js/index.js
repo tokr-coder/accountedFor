@@ -122,12 +122,10 @@ function ListAllMembers() {
 
                             }
                         }else{
-                            console.log("Si hay registros  para settigsS cantidad"+result.rows.length);
                             for (var i = 0; i < result.rows.length; i++) {
                                  var row = result.rows.item(0);
                                  if (window.localStorage.getItem("isMeetingStarted")!='1') document.getElementById("meeting_status").innerHTML = "- Meeting not started";
                                  var largeImage = document.getElementById('largeImage');
-                                 console.log("url imagen "+row.imageURI+ "id de la fila es "+row.setting_idf);
                                  largeImage.src = row.imageURI;
                                  document.getElementById("GroupNameDiv").innerHTML=row.nameGroup;
                                  meetingTime = row.meetingTime;
