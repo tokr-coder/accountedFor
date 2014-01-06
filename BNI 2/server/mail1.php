@@ -1,6 +1,7 @@
 <?php
 $filename= 'log.txt';
-file_put_contents($filename, "opened\r\n");
+$today = date("m.d.y");  
+file_put_contents($filename, "opened ". $today ."\r\n",FILE_APPEND);
 
 $memberBalanceToSendArray = $_POST['memberBalanceToSendArray'];    
 $memberEmailToSendArray = $_POST['memberEmailToSendArray']; 
@@ -14,6 +15,9 @@ $meetingStartedTime = $_POST['meetingStartedTime'];
 file_put_contents($filename, "memberEmailToSendArray ". join(", ", $memberEmailToSendArray) . "\r\n",FILE_APPEND);
 file_put_contents($filename, "memberBalanceToSendArray ". join(", ", $memberBalanceToSendArray) . "\r\n",FILE_APPEND);
 file_put_contents($filename, "memberNameToSendArray ". join(", ", $memberNameToSendArray) . "\r\n",FILE_APPEND);
+file_put_contents($filename, "paymentMethodToSendArray ". join(", ", $paymentMethodToSendArray) . "\r\n",FILE_APPEND);
+file_put_contents($filename, "descriptionToSendArray ". join(", ", $descriptionToSendArray) . "\r\n",FILE_APPEND);
+file_put_contents($filename, "meetingDateToSendArray ". join(", ", $meetingDateToSendArray) . "\r\n",FILE_APPEND);
 
 $totalcountarray = count($memberBalanceToSendArray);
 
@@ -21,19 +25,19 @@ for ($i=0; $i<$totalcountarray; $i++){
 	$payment_method = $paymentMethodToSendArray[$i];
 	$meeting_date = $meetingDateToSendArray[$i];
 	$products = $descriptionToSendArray[$i];
-	$email_to = $memberEmailToSendArray[$i];
+	$email_to = trim($memberEmailToSendArray[$i]);
 	$balance = $memberBalanceToSendArray[$i];
 	$sold_to=$memberNameToSendArray[$i];
 	$groupName=$_POST['groupName'];
 	$emailSetupValue = $_POST['emailSetupValue'];
 
-	file_put_contents($filename, "send:"." ".$payment_method." ".$meeting_date." ".$products." ".$email_to." ".$balance." ".$sold_to." ".$groupName." ".$emailSetupValue." "."\r\n",FILE_APPEND);
+	file_put_contents($filename, "send:".",".$payment_method.",".$meeting_date.",".$products.",".$email_to.",".$balance.",".$sold_to.",".$groupName.",".$emailSetupValue.","."\r\n",FILE_APPEND);
 
 	$sent = sendMail($payment_method,$meeting_date,$products,$email_to,$balance,$sold_to,$groupName,$emailSetupValue);
 	if(!$sent){$failcount += 1;}
 	$successArray[]=$sent;
 }
-	file_put_contents($filename, "sent:".$failcount."\r\n",FILE_APPEND);
+	file_put_contents($filename, "failed:".$failcount."\r\n",FILE_APPEND);
 
     $response['status'] ="ok";
     $response['failcount'] = $failcount;
@@ -133,7 +137,7 @@ for ($i=0; $i<$totalcountarray; $i++){
         <td width="68%"  style="border-right:1px solid #666; border-bottom:1px solid #666;">Description</td>
         <td width="14%"  style="  border-bottom:1px solid #666;" align="right">Amount </td>
         </tr><tr>
-                <td style="border-right:1px solid #666;">'.$products.'</td>
+                <td style="border-right:1px solid #666;">'.$products.' - ' .$groupName.'</td>
                 <td align="right">'.$balance.'</td>
                 </tr>
 	<tr>
@@ -153,7 +157,7 @@ for ($i=0; $i<$totalcountarray; $i++){
         <td>&nbsp;</td>
         </tr>
         <tr>
-        <td style="border-top:1px solid #666; border-right:1px solid #666;">&nbsp;</td>
+        <td style="border-top:1px solid #666; border-right:1px solid #666;">Thank-you for attending.</td>
         <td style="border-top:1px solid #666;" align="right"> Total:  $'.number_format($balance,2).'</td>
         </tr>
         </table>
