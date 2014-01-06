@@ -32,7 +32,7 @@ $(document).ready(function() {
   		var params = {
               "message": {
                   "from_email":"mail@twoviewsstudio.com",
-                  "to":[{"email":"anthonny.crespo@gmail.com"}],
+                  "to":[{"email":"apps@twoviewsstudio.com"}],
                   "subject": "Feedback from NBI App",
                   "html": "<p> Name: "+$('#name').val()+"</p></br><p>Email: "+$('#email').val()+"</p></br>"+
                   "<p>Subject: "+$('#subject').val()+"</p></br>"+"<p>Message: "+$('#message').val()+"</p>"
