@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Feedback</title>
+    <title>Change privacy Policy</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
     
-<body onload="">
+<body onload="onBodyLoadChangePolicy()">
 
     <div class="top_bar">
         <a href="settings.html"><div class="back">Back</div></a>
@@ -18,35 +18,15 @@
     <div class="main">
         <div class="heading">
             <img src="images/add_member.png" />
-            <p><span id='title'>Send feedback to developer</span><span id='title_message'></span></p>
+            <p><span id='title'>Change privacy policy</span><span id='title_message'></span></p>
         </div>
 
         <div class="add_member_outter">
-            <div class="text_form_outter">
-                <p>Name <span>*</span></p>
-                <div class="form_txt">
-                    <input id="name" type="text" name="name" placeholder="Name" class="form_txt_bg">
-                </div>
-            </div>
-
-            <div class="text_form_outter">
-                <p>Email </p>
-                <div class="form_txt">
-                    <input id="email" type="email" name="email" placeholder="Email" class="form_txt_bg">
-                </div>
-            </div>
-
-            <div class="text_form_outter">
-                <p>Subject</p>
-                <div class="form_txt">
-                    <input id="subject" type="text" name="subject" placeholder="Subject" type="text" class="form_txt_bg">
-                </div>
-            </div>
-
+           
             <div class="text_form_outter">
                 <p>Message <span>*</span></p>
                 <div class="form_txt">
-                    <textarea id="message" name="message" placeholder="Message" class="form_txt_bg"></textarea>
+                    <textarea id="policy" name="message" class="form_txt_bg" style="height: 200px"></textarea>
                 </div>
             </div>
 
@@ -55,21 +35,23 @@
             <div class="clear"></div>
 
 
-            <div class="text_form_outter">
+           <div class="text_form_outter_v">
                 <p></p>
-                <div class="form_txt">
-                    <div class="sub_outter">
-                        <input id="send" type="button" name="send" value="Send" class="submit_button"/>
+                <div class="form_txt_v">
+                    <div class="buttons">
+                        <div class="clear_outter">
+                            <input type="button" id="resetPolicy" name="resetPolicy" value="Reset to default " class="clear_button" />
+                        </div>
+
+                        <div class="pay_outter">
+                            <input type="button" id="savePolicy" name="savePolicy" value="Save" class="pay_button" />
+                        </div>
+
                     </div>
                 </div>
             </div>
 			<br/>
-		</div>
-	    <div class="heading">
-            <p>You may send comments, suggestions, bug reports, or any other kind of feedback to:</p>
-			<p>info@accountedFor.biz</p>
         </div>
-
         <div class="clear"></div>
     </div>
     <div class="bottom_bar">
@@ -99,8 +81,7 @@
         </div>
     </div>
      <script src="js/jquery.min.js"></script>
-     <script src="js/mandrill.js"></script>
      <script type="text/javascript" src="js/index.js"></script>
-     <script type="text/javascript" src="js/feedback.js"></script>
+     <script type="text/javascript" src="js/changePolicy.js"></script>
 </body>
 </html>

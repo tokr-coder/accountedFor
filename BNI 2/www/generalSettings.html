@@ -72,6 +72,14 @@
                 <p></p>
                 <div class="form_txt_s">
                     <div class="email_outter">
+                        <input type="submit" id="changePolicy" value="Change privacy policy" class="email_button"/>
+                    </div>
+                </div>
+            </div>
+                <div class="text_form_outter_s">
+                <p></p>
+                <div class="form_txt_s">
+                    <div class="email_outter">
                         <input type="submit" name="submit" value="Email Setup" class="email_button" onclick="emailSetupClicked();"/>
                     </div>
                 </div>
@@ -144,6 +152,10 @@
                                                            }
                                                            }); //end ptTimeSelect()
                           }); // end ready()
+
+                        $('#changePolicy').on('click',function(event){
+                            window.location='changePolicy.html';
+                        });
         </script>
 </body>
 </html>

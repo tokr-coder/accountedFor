@@ -51,7 +51,7 @@ function onBodyLoadVisitor(){
                               }
 
 
-                              if(meetingPayForVisitor){
+                              if(row.meetingPayForVisitor){
                                   document.getElementById('radio_paidBy').disabled = false;
                               }else{
                                   document.getElementById('radio_paidBy').disabled = true;
