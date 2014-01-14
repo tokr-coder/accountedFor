@@ -94,7 +94,7 @@ function CreateSettingsTable(){
 
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(tx){
-                   tx.executeSql('CREATE TABLE IF NOT EXISTS Settings(setting_id INTEGER PRIMARY KEY, nameGroup TEXT NOT NULL, meetingFee TEXT NOT NULL, meetingTime TEXT NOT NULL, meetingPayForVisitor boolean, meetingRequireSig boolean, imageURI TEXT, email TEXT)',
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS Settings(setting_id INTEGER PRIMARY KEY, nameGroup TEXT NOT NULL, meetingFee TEXT NOT NULL, meetingTime TEXT NOT NULL, meetingPayForVisitor boolean, meetingRequireSig boolean, imageURI TEXT, email TEXT, policy TEXT)',
                              [],nullHandler,errorHandler);
                 },errorHandler,ListAllMembers);     
 
