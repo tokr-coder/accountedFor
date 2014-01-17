@@ -3,9 +3,6 @@ var meetingTime;
 var paymentMethod = "";
 var idTosend;
 var memberBalanceToSend;
-var memberEmailToSend;
-var descriptionString = "";
-var memberNameToSend;
 var ids = new Array();
 var q;
 var memberIdToSendArray = new Array();
@@ -15,6 +12,12 @@ var memberNameToSendArray = new Array();
 var descriptionToSendArray = new Array();
 var paymentMethodToSendArray = new Array();
 var meetingDateToSendArray = new Array();
+var TotalEmails = 0;
+var positionActual = 0;
+var meetingStartedTimeForReceipts;
+var groupName;
+var meetingTimeFromDB;
+var emailSetupValue;
 
 
 var started = 0;
@@ -113,6 +116,7 @@ function sendReceiptsClicked(){
 					// the meeting date is not being sent!!!
 					// only the date of sending is used << wrong !
 					**************/
+					memberIdToSendArray[i]= row.id;
 					meetingDateToSendArray[i] = row.meetingdate;
 					memberBalanceToSendArray[i] = row.amount;
 					memberEmailToSendArray[i] = row.email;
@@ -120,12 +124,8 @@ function sendReceiptsClicked(){
 					descriptionToSendArray[i] = 'meeting fee';
 					paymentMethodToSendArray[i] = row.paymentmethod;
 				}
-/* 				console.log(meetingDateToSendArray.toString());
-				console.log(memberBalanceToSendArray.toString());
-				console.log(memberEmailToSendArray.toString());
-				console.log(memberNameToSendArray.toString());
-				console.log(descriptionToSendArray.toString());
- */			}
+
+ 			}
 		},errorHandler);
 	},errorHandler,sendMemberSuccessAfterFetchingFromDbToAll);
 }
@@ -138,11 +138,14 @@ function sendMemberSuccessAfterFetchingFromDbToAll(){
                     if (result.rows.length > 0) {
                         for (var i = 0; i < result.rows.length; i++) {
                                var row = result.rows.item(i);
-                               var meetingStartedTimeForReceipts  = window.localStorage.getItem("meetingStartedTimeForReceipts");
-    						   var groupName=  row.nameGroup;
-                               var meetingTimeFromDB = row.meetingTime;
-                               var emailSetupValue = row.email;
-                                   $.ajax({
+                               meetingStartedTimeForReceipts  = window.localStorage.getItem("meetingStartedTimeForReceipts");
+    						   groupName=  row.nameGroup;
+                               meetingTimeFromDB = row.meetingTime;
+                               emailSetupValue = row.email;
+                               totalEmails = memberBalanceToSendArray.length-1;
+                               sendReciepsFromMandrill(totalEmails, positionActual,memberIdToSendArray, memberBalanceToSendArray,memberEmailToSendArray, memberNameToSendArray, paymentMethodToSendArray, descriptionToSendArray, meetingStartedTimeForReceipts, meetingDateToSendArray, groupName, emailSetupValue);
+
+                                   /*$.ajax({
 							           type: "POST",
 							           url: 'http://accountedfor.biz/send/mail1.php',
 							           dataType: 'json',
@@ -173,7 +176,7 @@ function sendMemberSuccessAfterFetchingFromDbToAll(){
 							                descriptionToSendArray = [];
 							                alert("Receipts not Sent ..");
 							                location.reload();     }
-							           });
+							           });*/
                         }
                     }
                 },errorHandler);
@@ -188,10 +191,140 @@ function sendMemberSuccessAfterFetchingFromDbToAll(){
     if(emailSetupValue == null) {
         emailSetupValue = "bni@bni.com";
     }*/
-
-
-    
 }
+
+function successfullyConnectionMandrill(obj){
+	      
+        if(obj[0]['status'] == 'sent'){
+	         
+	         if(positionActual != totalEmails){
+	         	positionActual++;
+	         	sendReciepsFromMandrill(totalEmails, positionActual, memberIdToSendArray, memberBalanceToSendArray,memberEmailToSendArray, memberNameToSendArray, paymentMethodToSendArray, descriptionToSendArray, meetingStartedTimeForReceipts, meetingDateToSendArray, groupName, emailSetupValue);
+	         }else{
+	         	meetingDateToSendArray = [];
+                memberBalanceToSendArray = [];
+                memberEmailToSendArray = [];
+                memberNameToSendArray = [];
+                paymentMethodToSendArray = [];
+                descriptionToSendArray = [];
+                memberIdToSendArray = [];
+				db = openDatabase(shortName, version, displayName,maxSize);
+				db.transaction(function(tx) {
+					var sql="UPDATE Receipts SET sent = 1 WHERE id IN ("+ids.join()+")";
+					tx.executeSql(sql,null);
+				},errorHandler,nullHandler);
+				
+                alert("Receipts Sent Successfully..");
+				ReloadList();
+	         }
+
+           //window.location="settings.html";
+	      }else{
+	       console.log("Failed to send your receipts, try again later"+obj[0]['status']);
+	       alert("Failed to send your receipts, try again later");
+	      } 
+      }
+
+      function incorrectConnectionMandrill(obj){
+         console.log("Failed to send your receipts, try again later "+JSON.stringify(obj));
+         alert("Failed to send your receipts, try again later");
+         //window.location="settings.html";
+      }
+
+function sendReciepsFromMandrill(totalEmails, positionActual, memberIdToSendArray, memberBalanceToSendArray,memberEmailToSendArray, memberNameToSendArray, paymentMethodToSendArray, descriptionToSendArray, meetingStartedTimeForReceipts, meetingDateToSendArray, groupName, emailSetupValue){
+    
+    var message= '<div style="width:700px; padding:20px; background:#f6f6f6; border:1px solid #ccc; margin:20px auto; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px;">'+
+        '<table width="100%" border="0" cellspacing="5" cellpadding="10">'+
+        '<tr>'+
+        '<td width="42%" align="left" valign="top">'+groupName+'<br />'+
+        '</td><td colspan="2"  valign="top"><h2 style="padding:0px; margin:0px; margin-bottom:10px;">Sales Receipt</h2>'+
+        '<table width="100%" border="0" style="border:1px solid #666;" cellspacing="0" cellpadding="5" align="center">'+
+        '<tr>'+
+        '<td align="center" style="border-right:1px solid #666; border-bottom:1px solid #666;">Date</td>'+
+        '<td align="center" style="border-bottom:1px solid #666;">Invoice No.</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td align="center"  style="border-right:1px solid #666;">'+meetingDateToSendArray[positionActual]+
+        '<td align="center">'+memberIdToSendArray[positionActual]+'</td>'+
+        '</tr>'+
+        '</table></td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td colspan="3">'+
+        '<table width="40%" border="0" cellspacing="0" cellpadding="5"  style="border:1px solid #666;" >'+
+        '<tr>'+
+        '<td style="border-bottom:1px solid #666;">Sold To</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>'+memberNameToSendArray[positionActual]+'</td>'+
+        '</tr>'+
+        '</table></td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td>Payment was received.</td>'+
+        '<td colspan="2" align="right">'+
+        '<table width="60%" border="0" style="border:1px solid #666;" cellspacing="0" cellpadding="5" align="right">'+
+        '<tr>'+
+        '<td align="center" style="border-bottom:1px solid #666;  ">Payment Method</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td align="center" >'+paymentMethodToSendArray[positionActual]+'</td>'+
+        '</tr>'+
+        '</table>    </td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td colspan="3">'+
+        '<table width="100%" border="0" cellspacing="0" cellpadding="5"  style="border:1px solid #666;" >'+
+        '<tr>'+
+        '<td width="68%"  style="border-right:1px solid #666; border-bottom:1px solid #666;">Description</td>'+
+        '<td width="14%"  style="  border-bottom:1px solid #666;" align="right">Amount </td>'+
+        '</tr><tr>'+
+                '<td style="border-right:1px solid #666;">'+descriptionToSendArray[positionActual]+' - ' +groupName+'</td>'+
+                '<td align="right">'+memberBalanceToSendArray[positionActual]+'</td>'+
+                '</tr>'+
+	'<tr>'+
+        '<td  style="border-right:1px solid #666;">&nbsp;</td>'+
+        '<td>&nbsp;</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td  style="border-right:1px solid #666;">&nbsp;</td>'+
+        '<td>&nbsp;</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td  style="border-right:1px solid #666;">&nbsp;</td>'+
+        '<td>&nbsp;</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td  style="border-right:1px solid #666;">&nbsp;</td>'+
+        '<td>&nbsp;</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td style="border-top:1px solid #666; border-right:1px solid #666;">Thank-you for attending.</td>'+
+        '<td style="border-top:1px solid #666;" align="right"> Total: $'+memberBalanceToSendArray[positionActual]+'</td>'+
+        '</tr>'+
+        '</table>'+
+        '</td>'+
+        '</tr>'+
+        '<tr>'+
+        '<td colspan="3" align="left">'+
+        '<br />'+
+            '</td>'+
+        '</tr>'+
+        '</table>'+
+        '</div>';
+
+        var m = new mandrill.Mandrill('EVe75fwrZLEaW0JZkYxmTQ');
+        var params = {
+              "message": {
+                  "from_email":""+emailSetupValue,
+                  "to":[{"email":""+memberEmailToSendArray[positionActual]}],
+                  "subject": "Sales Receipt",
+                  "html": ""+message
+              }
+          };
+    
+    m.messages.send(params,successfullyConnectionMandrill,incorrectConnectionMandrill);
+    }
 
 
 
