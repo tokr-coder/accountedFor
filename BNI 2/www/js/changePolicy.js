@@ -1,3 +1,8 @@
+var strDefaultPolicy ='We respect your right to privacy and wish to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that we may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. PIPEDA) and may do the following with your personal information.\n\n'+
+'1) Disclose your personal information to our organization (and you also consent to the collection of your personal information by this organization.)\n\n'+
+'2) Use your personal information to advise you of upcoming events and promotions.\n\n'+
+'In agreeing to the above, you acknowledge that the Privacy Laws, as set out in PIPEDA, do not apply to the collection, use and disclosure of your Personal Information by any of the entities named above. Notwithstanding the above, our group, will not sell or disclose your Personal Information in a list form to any other company or entity';
+
 function onBodyLoadChangePolicy(){
 
 	db = openDatabase(shortName, version, displayName,maxSize);
@@ -11,20 +16,14 @@ function onBodyLoadChangePolicy(){
                         for (var i = 0; i < result.rows.length; i++) {
                                var row = result.rows.item(i);
                                if(row.policy == null){
-                                 $('#policy').html('We respect your right to privacy and wish to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that we may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. PIPEDA) and may do the following with your personal information.\n\n'+
-                                                   '1) Disclose your personal information to our organization (and you also consent to the collection of your personal information by this organization.)\n\n'+
-                                                   '2) Use your personal information to advise you of upcoming events and promotions.\n\n'+
-                                                   'In agreeing to the above, you acknowledge that the Privacy Laws, as set out in PIPEDA, do not apply to the collection, use and disclosure of your Personal Information by any of the entities named above. Notwithstanding the above, our group, will not sell or disclose your Personal Information in a list form to any other company or entity');
+                                 $('#policy').html(strDefaultPolicy);
                                }else{
                                 $('#policy').html(row.policy);
                                }
                         }
                     }
                     else{
-                           $('#policy').html('We respect your right to privacy and wish to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that we may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. PIPEDA) and may do the following with your personal information.\n\n'+
-                                                   '1) Disclose your personal information to our organization (and you also consent to the collection of your personal information by this organization.)\n\n'+
-                                                   '2) Use your personal information to advise you of upcoming events and promotions.\n\n'+
-                                                   'In agreeing to the above, you acknowledge that the Privacy Laws, as set out in PIPEDA, do not apply to the collection, use and disclosure of your Personal Information by any of the entities named above. Notwithstanding the above, our group, will not sell or disclose your Personal Information in a list form to any other company or entity');
+                           $('#policy').html(strDefaultPolicy);
                         }
                 },errorHandler);
             },errorHandler,nullHandler);
@@ -53,10 +52,7 @@ $(document).ready(function() {
 
   $('#resetPolicy').on('click',function(event){
       event.preventDefault();
-      $('#policy').html('We respect your right to privacy and wish to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that we may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. PIPEDA) and may do the following with your personal information.\n\n'+
-                                                   '1) Disclose your personal information to our organization (and you also consent to the collection of your personal information by this organization.)\n\n'+
-                                                   '2) Use your personal information to advise you of upcoming events and promotions.\n\n'+
-                                                   'In agreeing to the above, you acknowledge that the Privacy Laws, as set out in PIPEDA, do not apply to the collection, use and disclosure of your Personal Information by any of the entities named above. Notwithstanding the above, our group, will not sell or disclose your Personal Information in a list form to any other company or entity');
+      $('#policy').html(strDefaultPolicy);
       insertSetting();
   });
 
