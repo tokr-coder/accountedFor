@@ -133,15 +133,13 @@ function sendReceiptsClicked(){
 function sendMemberSuccessAfterFetchingFromDbToAll(){
       db = openDatabase(shortName, version, displayName,maxSize);
       db.transaction(function(transaction) {  
-      var sql = 'SELECT * FROM Settings';
+      var sql = 'SELECT * FROM Setting';
         transaction.executeSql(sql, [],function(transaction, result) {
-                    if (result.rows.length > 0) {
-                        for (var i = 0; i < result.rows.length; i++) {
-                               var row = result.rows.item(i);
+                    if (result.rows.length > 6) {
                                meetingStartedTimeForReceipts  = window.localStorage.getItem("meetingStartedTimeForReceipts");
-    						   groupName=  row.nameGroup;
-                               meetingTimeFromDB = row.meetingTime;
-                               emailSetupValue = row.email;
+    						   groupName=  result.rows.item(0).value;
+                               meetingTimeFromDB = result.rows.item(2).value;
+                               emailSetupValue = result.rows.item(6).value;
                                totalEmails = memberBalanceToSendArray.length-1;
                                sendReciepsFromMandrill(totalEmails, positionActual,memberIdToSendArray, memberBalanceToSendArray,memberEmailToSendArray, memberNameToSendArray, paymentMethodToSendArray, descriptionToSendArray, meetingStartedTimeForReceipts, meetingDateToSendArray, groupName, emailSetupValue);
 
@@ -177,7 +175,6 @@ function sendMemberSuccessAfterFetchingFromDbToAll(){
 							                alert("Receipts not Sent ..");
 							                location.reload();     }
 							           });*/
-                        }
                     }
                 },errorHandler);
             },errorHandler,nullHandler);

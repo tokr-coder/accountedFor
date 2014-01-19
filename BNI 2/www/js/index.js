@@ -10,6 +10,11 @@ var iconImg= 'images/accountedforicon.png';
 var emailSetting = 'bni@bni.com';
 var meetingTime;
 
+var defaultPolicy = 'We respect your right to privacy and wish to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that we may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. PIPEDA) and may do the following with your personal information.<br><br>'+
+                    '1) Disclose your personal information to our organization (and you also consent to the collection of your personal information by this organization.)<br><br>'+
+                    '2) Use your personal information to advise you of upcoming events and promotions.<br><br>'+
+                    'In agreeing to the above, you acknowledge that the Privacy Laws, as set out in PIPEDA, do not apply to the collection, use and disclosure of your Personal Information by any of the entities named above. Notwithstanding the above, our group, will not sell or disclose your Personal Information in a list form to any other company or entity';
+
 // this is called when an error happens in a transaction
 function errorHandler(transaction, error) {
     alert('Error: ' + error.message + ' code: ' + error.code);
@@ -38,7 +43,9 @@ function onDeviceReady()
             return;
         }
         db = openDatabase(shortName, version, displayName,maxSize);
+        
         db.transaction(function(tx){
+                       //tx.executeSql('DROP TABLE IF EXISTS Setting');
                        tx.executeSql('CREATE TABLE IF NOT EXISTS Members(member_id INTEGER NOT NULL PRIMARY KEY, member_firstname TEXT NOT NULL, member_lastname TEXT NOT NULL, member_email TEXT NOT NULL, member_phonenumber TEXT NOT NULL, member_company TEXT NOT NULL, member_balance REAL NOT NULL, member_checkintime TEXT NOT NULL, member_active INTEGER NOT NULL)',
                                  [],nullHandler,errorHandler);
                     },errorHandler,CreateLogTable);    
@@ -78,6 +85,7 @@ function CreateVisitorTable(){
     }
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(tx){
+
                    tx.executeSql('CREATE TABLE IF NOT EXISTS Visitors(name VARCHAR(255) NOT NULL PRIMARY KEY, email TEXT NOT NULL, phone TEXT, company TEXT, signature INTEGER, meetingdate long NOT NULL, numberVisits INTEGER, idMember INTEGER)',
                              [],nullHandler,errorHandler);
                 },errorHandler,CreateSettingsTable);     
@@ -94,7 +102,7 @@ function CreateSettingsTable(){
 
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(tx){
-                   tx.executeSql('CREATE TABLE IF NOT EXISTS Settings(setting_id INTEGER PRIMARY KEY, nameGroup TEXT NOT NULL, meetingFee TEXT NOT NULL, meetingTime TEXT NOT NULL, meetingPayForVisitor boolean, meetingRequireSig boolean, imageURI TEXT, email TEXT, policy TEXT)',
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS Setting(id INTEGER UNIQUE, nameSetting TEXT NOT NULL, value TEXT NOT NULL)',
                              [],nullHandler,errorHandler);
                 },errorHandler,ListAllMembers);     
 
@@ -104,11 +112,11 @@ function CreateSettingsTable(){
 
 function ListAllMembers() {
    // alert("List Members");
-    var sql = 'SELECT * FROM Settings';
+    var sql = 'SELECT * FROM Setting';
         db = openDatabase(shortName, version, displayName,maxSize);
         db.transaction(function(transaction) {  
             transaction.executeSql(sql, [],function(transaction, result) {
-                        if (result.rows.length == 0) {
+                        if (result.rows.length < 6) {
                             var largeImage = document.getElementById('largeImage');
                             var welcome = window.localStorage.getItem("showWelcomeScreen");
                             if (welcome == null) {
@@ -122,14 +130,12 @@ function ListAllMembers() {
 
                             }
                         }else{
-                            for (var i = 0; i < result.rows.length; i++) {
-                                 var row = result.rows.item(0);
                                  if (window.localStorage.getItem("isMeetingStarted")!='1') document.getElementById("meeting_status").innerHTML = "- Meeting not started";
                                  var largeImage = document.getElementById('largeImage');
-                                 largeImage.src = row.imageURI;
-                                 document.getElementById("GroupNameDiv").innerHTML=row.nameGroup;
-                                 meetingTime = row.meetingTime;
-                            }
+                                 largeImage.src = result.rows.item(5).value;
+                                 document.getElementById("GroupNameDiv").innerHTML=result.rows.item(0).value;
+                                 meetingTime = result.rows.item(2).value;
+                            
 
                                 db.transaction(function(transaction) {
                                 transaction.executeSql('SELECT * FROM Members ORDER BY member_firstname;', [],function(transaction, results) {

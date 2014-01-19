@@ -29,17 +29,17 @@ $(document).ready(function() {
       
       	var m = new mandrill.Mandrill('EVe75fwrZLEaW0JZkYxmTQ');
   		
-  		var params = {
-              "message": {
-                  "from_email":"mail@twoviewsstudio.com",
-                  "to":[{"email":"apps@twoviewsstudio.com"}],
-                  "subject": "Feedback from AccountedFor App",
-                  "html": "<p> Name: "+$('#name').val()+"</p></br><p>Email: "+$('#email').val()+"</p></br>"+
-                  "<p>Subject: "+$('#subject').val()+"</p></br>"+"<p>Message: "+$('#message').val()+"</p>"
-              }
-          };
-  		m.messages.send(params,successfullyConnectionMandrill,incorrectConnectionMandrill);
-      
+    		var params = {
+                "message": {
+                    "from_email":"mail@twoviewsstudio.com",
+                    "to":[{"email":"apps@twoviewsstudio.com"}],
+                    "subject": "Feedback from AccountedFor App",
+                    "html": "<p> Name: "+$('#name').val()+"</p></br><p>Email: "+$('#email').val()+"</p></br>"+
+                    "<p>Subject: "+$('#subject').val()+"</p></br>"+"<p>Message: "+$('#message').val()+"</p>"
+                }
+            };
+  		
+        m.messages.send(params,successfullyConnectionMandrill,incorrectConnectionMandrill);
       }
 
       $('#send').click(function(e){

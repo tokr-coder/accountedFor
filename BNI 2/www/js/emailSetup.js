@@ -14,16 +14,14 @@ function onBodyLoadEmailSetup(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {  
 
-      var sql = 'SELECT * FROM Settings';
+      var sql = 'SELECT * FROM Setting';
       
         transaction.executeSql(sql, [],function(transaction, result) {
-                    if (result.rows.length > 0) {
-                        for (var i = 0; i < result.rows.length; i++) {
-                               var row = result.rows.item(i);
+                    if (result.rows.length > 6) {
                                window['Groups']=true;
-                               document.getElementById("emailSetupText").value = row.email;
+                               document.getElementById("emailSetupText").value = result.rows.item(6).value;
                                console.log("On load email");
-                        }
+                        
                     }else{
                        
                         window['Groups']=false;
@@ -51,7 +49,7 @@ $('#saveEmail').click(function(event){
         
         if(!window['Groups']){
             db.transaction(function(transaction) {
-            transaction.executeSql('INSERT INTO Settings(email) VALUES (?)',[emailSetupValue],function (){
+            transaction.executeSql('INSERT INTO Setting (id, nameSetting, value) VALUES (?,?,?)',[7,'email',emailSetupValue ],function (){
                 alert("Saved");
                 console.log("se agrego el email");
                 window.location.href = "generalSettings.html";
@@ -60,7 +58,7 @@ $('#saveEmail').click(function(event){
 
         }else{
             db.transaction(function(transaction) {
-                transaction.executeSql('UPDATE Settings SET email=? where setting_id = ?', [emailSetupValue, 1 ],function(){
+                transaction.executeSql('UPDATE Setting SET value=? where id = ?', [emailSetupValue, 7 ],function(){
                 console.log("se actualizo la fila de settings");
                 alert("Saved");
                 window.location.href = "generalSettings.html";

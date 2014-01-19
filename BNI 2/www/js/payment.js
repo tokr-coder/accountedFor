@@ -21,13 +21,12 @@ function onBodyLoadPayment(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {  
 
-      var sql = 'SELECT * FROM Settings';
+      var sql = 'SELECT * FROM Setting';
       
         transaction.executeSql(sql, [],function(transaction, result) {
-                    if (result.rows.length > 0) {
-                        for (var i = 0; i < result.rows.length; i++) {
+                    if (result.rows.length > 6) {
                                var row = result.rows.item(i);
-                               meetingFeeInPay = row.meetingFee;
+                               meetingFeeInPay = result.rows.item(1).value;
                                if(fromlink == "ok"){
                                     document.getElementById("paymentAmount").value = '';
                                }else{
@@ -36,8 +35,6 @@ function onBodyLoadPayment(){
                                }
 
                                db.transaction(fetchMemberDetails,errorHandler,nullHandler);
-                               
-                        }
                     }
                 },errorHandler);
             },errorHandler,nullHandler);
