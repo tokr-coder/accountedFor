@@ -17,8 +17,6 @@ var paymentMethodToSendArray = new Array();
 
 
 function onBodyLoadSettings(){
-    //alert("daaa");
-    
 
     var isMeetingStarted = window.localStorage.getItem("isMeetingStarted");
     var isMeetingEnd = window.localStorage.getItem("isMeetingEnd");
@@ -375,7 +373,7 @@ function onPhotoURISuccess(imageURI) {
      
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
-        transaction.executeSql('UPDATE Settings SET imageURI=? where setting_id = ?', [imageURI, 1],function(){
+        transaction.executeSql('UPDATE Setting SET value=? where id = ?', [imageURI, 6],function(){
             alert("Success");
         },errorCB);
         },errorHandler,nullHandler);

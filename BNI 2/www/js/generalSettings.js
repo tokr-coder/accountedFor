@@ -3,20 +3,19 @@ function onBodyLoadGeneralSettings(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {  
 
-      var sql = 'SELECT * FROM Settings';
+      var sql = 'SELECT * FROM Setting';
       
         transaction.executeSql(sql, [],function(transaction, result) {
-                    if (result.rows.length > 0) {
-                        for (var i = 0; i < result.rows.length; i++) {
+                    if (result.rows.length > 6) {
                                window['Groups']=true;
-                               var row = result.rows.item(i);
-                               document.getElementById("meetingFeeEntered").value = row.meetingFee ;
-                               document.getElementById("Groupname").value = row.nameGroup;
-                               document.getElementById("meetingTime").value = row.meetingTime;
-                               if(!row.meetingPayForVisitor) document.getElementById("visitorAllow").checked = false;
-                               if(!row.meetingRequireSig) document.getElementById("requireSig").checked = false;
-                               emailSetting = row.email;
-                        }
+                               //var row = result.rows.item(i);
+                               document.getElementById("meetingFeeEntered").value = result.rows.item(1).value;
+                               document.getElementById("Groupname").value = result.rows.item(0).value;
+                               document.getElementById("meetingTime").value = result.rows.item(2).value
+                               if(result.rows.item(3).value == 'false') document.getElementById("visitorAllow").checked = false;
+                               if(result.rows.item(4).value == 'false') document.getElementById("requireSig").checked = false;
+                               emailSetting = result.rows.item(6).value;
+                        
                     }else{
                         document.getElementById("meetingFeeEntered").value = '';
                         document.getElementById("Groupname").value = '';
@@ -28,26 +27,6 @@ function onBodyLoadGeneralSettings(){
                     }
                 },errorHandler);
             },errorHandler,nullHandler);
-
-    /*var meetingFeeTextValue = window.localStorage.getItem("meetingFee");
-    var meetingGroupTextValue = window.localStorage.getItem("groupName");
-    var meetingTimeTextValue = window.localStorage.getItem("meetingTime");
-    var meetingPayForVisitor = window.localStorage.getItem("visitorAllow");
-    var meetingRequireSig = window.localStorage.getItem("requireSig");
-    
-    if(meetingFeeTextValue != null && meetingGroupTextValue != null && meetingTimeTextValue != null && meetingPayForVisitor != null) {
-       document.getElementById("meetingFeeEntered").value = meetingFeeTextValue ;
-        document.getElementById("Groupname").value = meetingGroupTextValue;
-        document.getElementById("meetingTime").value = meetingTimeTextValue;
-		if(meetingPayForVisitor == "0") document.getElementById("visitorAllow").checked = false;
-		if(meetingRequireSig == "0") document.getElementById("requireSig").checked = false;
-    } else {
-        document.getElementById("meetingFeeEntered").value = '';
-        document.getElementById("Groupname").value = '';
-        document.getElementById("meetingTime").value = '';
-		document.getElementById("visitorAllow").checked = true;
-		document.getElementById("requireSig").checked = true;
-    }*/
 
 }
 
@@ -69,128 +48,67 @@ function saveClicked() {
         
         if(!window['Groups']){
             //insert
-            insertSetting();
+            insertIntoDB('settings.html');
 
         }else{
             //update
-            updateSetting();
+            updateIntoDB('settings.html');
         }
         
-        /*window.localStorage.setItem("meetingFee", mFees);
-        window.localStorage.setItem("groupName", groupName);
-        window.localStorage.setItem("meetingTime", meetingTime);
-        
-        
-        if(document.getElementById("visitorAllow").checked == true){
-            window.localStorage.setItem("visitorAllow", "1");
-        }else{
-            window.localStorage.setItem("visitorAllow", "0");
-        }
-        
-        if(document.getElementById("requireSig").checked == true){
-            window.localStorage.setItem("requireSig", "1");
-        }else{
-            window.localStorage.setItem("requireSig", "0");
-        }
-        
-        alert("Saved");
-        window.location.href = "settings.html";
-        return false;*/
-
     }
     
 }
 
-function insertSetting(){
-    console.log("insert setting");
+function insertIntoDB(redirects){
     if(document.getElementById("visitorAllow").checked == true){
-            var meetingPayForVisitor =  true;
+            var meetingPayForVisitor =  'true';
     }else{
-        var meetingPayForVisitor =  false;
+        var meetingPayForVisitor =  'false';
     }
     
     if(document.getElementById("requireSig").checked == true){
-        var meetingRequireSig = true;
+        var meetingRequireSig = 'true';
     }else{
-        var meetingRequireSig = false;
+        var meetingRequireSig = 'false';
     }
+
     db.transaction(function(transaction) {
-            transaction.executeSql('INSERT INTO Settings(nameGroup, meetingFee,meetingTime,meetingPayForVisitor,meetingRequireSig,imageURI,email) VALUES (?,?,?,?,?,?,?)',[$('#Groupname').val(),$('#meetingFeeEntered').val(),$('#meetingTime').val(),meetingPayForVisitor,meetingRequireSig,iconImg,emailSetting],function (){
-                alert("Saved");
-                console.log("se agrego la configuracio");
-                window.location.href = "settings.html";
-            },errorHandler);
-            });
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[1,'nameGroup',$('#Groupname').val()]);
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[2,'meetingFee',$('#meetingFeeEntered').val()]); 
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[3,'meetingTime',$('#meetingTime').val()]);
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[4,'meetingPayForVisitor',meetingPayForVisitor]);
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[5,'meetingRequireSig',meetingRequireSig]);
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[6,'imageURI',iconImg]);
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[7,'email',emailSetting]);
+        transaction.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[8,'policy','none']);
+
+            alert("Saved");
+            window.location.href = redirects;
+        },errorHandler);
 }
 
-function insertSettingFromEmail(){
-    console.log("insert setting");
+function updateIntoDB(redirects){
     if(document.getElementById("visitorAllow").checked == true){
-            var meetingPayForVisitor =  true;
+            var meetingPayForVisitor =  'true';
     }else{
-        var meetingPayForVisitor =  false;
+        var meetingPayForVisitor =  'false';
     }
     
     if(document.getElementById("requireSig").checked == true){
-        var meetingRequireSig = true;
+        var meetingRequireSig = 'true';
     }else{
-        var meetingRequireSig = false;
+        var meetingRequireSig = 'false';
     }
-    db.transaction(function(transaction) {
-            transaction.executeSql('INSERT INTO Settings(nameGroup, meetingFee,meetingTime,meetingPayForVisitor,meetingRequireSig,imageURI,email) VALUES (?,?,?,?,?,?,?)',[$('#Groupname').val(),$('#meetingFeeEntered').val(),$('#meetingTime').val(),meetingPayForVisitor,meetingRequireSig,iconImg,emailSetting],function (){
-                alert("Saved");
-                console.log("se agrego la configuracio");
-                window.location.href = "emailSetup.html";
-            },errorHandler);
-            });
-}
 
-function updateSetting(){
-    console.log("update setting");
-    if(document.getElementById("visitorAllow").checked == true){
-            var meetingPayForVisitor =  true;
-    }else{
-        var meetingPayForVisitor =  false;
-    }
-    
-    if(document.getElementById("requireSig").checked == true){
-        var meetingRequireSig = true;
-    }else{
-        var meetingRequireSig = false;
-    }
-    
     db.transaction(function(transaction) {
-        transaction.executeSql('UPDATE Settings SET meetingFee=? , nameGroup=? , meetingTime=?, meetingPayForVisitor=? , meetingRequireSig=?, imageURI=?, email=? where setting_id = ?', [$('#meetingFeeEntered').val(),$('#Groupname').val(),$('#meetingTime').val(),meetingPayForVisitor,meetingRequireSig,iconImg,emailSetting, 1 ],function(){
-            console.log("se actualizo la fila de settings");
+        transaction.executeSql('UPDATE Setting SET value=? where id = ?', [$('#Groupname').val(), 1 ]);
+        transaction.executeSql('UPDATE Setting SET value=? where id = ?', [$('#meetingFeeEntered').val(), 2 ]);
+        transaction.executeSql('UPDATE Setting SET value=? where id = ?', [$('#meetingTime').val(), 3 ]);
+        transaction.executeSql('UPDATE Setting SET value=? where id = ?', [meetingPayForVisitor, 4 ]);
+        transaction.executeSql('UPDATE Setting SET value=? where id = ?', [meetingRequireSig, 5 ]);
             alert("Update");
-            window.location.href = "settings.html";
-        },errorCB);
-        },errorHandler,nullHandler);
-
-}
-
-function updateSettingFromEmail(){
-    console.log("update setting");
-    if(document.getElementById("visitorAllow").checked == true){
-            var meetingPayForVisitor =  true;
-    }else{
-        var meetingPayForVisitor =  false;
-    }
-    
-    if(document.getElementById("requireSig").checked == true){
-        var meetingRequireSig = true;
-    }else{
-        var meetingRequireSig = false;
-    }
-    
-    db.transaction(function(transaction) {
-        transaction.executeSql('UPDATE Settings SET meetingFee=? , nameGroup=? , meetingTime=?, meetingPayForVisitor=? , meetingRequireSig=?, imageURI=?, email=? where setting_id = ?', [$('#meetingFeeEntered').val(),$('#Groupname').val(),$('#meetingTime').val(),meetingPayForVisitor,meetingRequireSig,iconImg,emailSetting, 1 ],function(){
-            console.log("se actualizo la fila de settings");
-            alert("Update");
-            window.location.href = "emailSetup.html";
-        },errorCB);
-        },errorHandler,nullHandler);
-
+            window.location.href = redirects;
+        },errorHandler);
 }
 
 function cancelClicked(){
@@ -218,11 +136,11 @@ function emailSetupClicked() {
                 
                 if(!window['Groups']){
                     //insert
-                    insertSettingFromEmail();
+                    insertIntoDB('emailSetup.html');
 
                 }else{
                     //update
-                    updateSettingFromEmail();
+                    updateIntoDB('emailSetup.html');
                 }
                 /*window.localStorage.setItem("meetingFee", mFees);
                 window.localStorage.setItem("groupName", groupName);

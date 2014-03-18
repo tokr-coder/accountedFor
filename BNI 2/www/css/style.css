@@ -129,13 +129,6 @@ border:solid 1px #FFFFFF;
 color:#000; font:normal 12px "Arial"; cursor:pointer; text-align:center;
 text-shadow: 1px 1px #FFFFFF;
 }
-
-	
-	
-	
-	
-	
-	
 	
 	/*home*/
 .group_center
@@ -189,7 +182,7 @@ text-shadow: 1px 1px #FFFFFF;
 
 
 .save_outter_sr
-{ min-width:150px; height:58px; float:left; margin:0 15px 0 0;}
+{ width:150px; height:58px; float:left; margin:0 15px 0 0;}
 
 .save_button_sr
 { width:150px; height:58px;
@@ -279,7 +272,7 @@ text-shadow: 1px 1px #FFFFFF;
 /* body page */
 
 body
-{ background:url(../images/bg.jpg )repeat; background-attachment:scroll;}
+{ background:url(../images/bg.jpg )repeat; background-attachment:fixed;}
 
 /* top bar */
 
@@ -1050,7 +1043,7 @@ text-shadow: 1px 1px #FFFFFF;
 
 
 .save_outter
-{ min-width:150px; height:58px; float:right; margin:0 15px;}
+{ width:150px; height:58px; float:right;}
 
 .save_button
 { width:150px; height:58px;
@@ -1609,8 +1602,7 @@ text-shadow: 1px 1px #FFFFFF;
     }
 /* body page */
 
-body
-{ background:url(../images/bg.jpg )repeat; background-attachment:scroll;}
+
 
 /* top bar */
 
@@ -2935,9 +2927,6 @@ text-shadow: 1px 1px #FFFFFF;
         float:left;
     }
 /* body page */
-
-body
-{ background:url(../images/bg.jpg )repeat; background-attachment:fixed;}
 
 /* top bar */
 

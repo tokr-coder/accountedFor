@@ -30,14 +30,11 @@ function onBodyLoadVisitor(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {  
 
-      var sql = 'SELECT * FROM Settings';
+      var sql = 'SELECT * FROM Setting';
       
         transaction.executeSql(sql, [],function(transaction, result) {
-                    if (result.rows.length > 0) {
-                        for (var i = 0; i < result.rows.length; i++) {
-                               var row = result.rows.item(i);
-                               meetingFee = row.meetingFee;
-                               
+                    if (result.rows.length > 6) {
+                               meetingFee = result.rows.item(1).value;
                                var meetingFeeInDoller = "$"+meetingFee;
                                document.getElementById("MeetingFeeFromDb").innerHTML=document.getElementById("MeetingFeeFromDb").innerHTML+meetingFeeInDoller;
                                fillPayByMemberFromDatabase();
@@ -46,26 +43,29 @@ function onBodyLoadVisitor(){
                                   $('input').attr('disabled','disabled');
                                }
                               
-                              if(row.meetingRequireSig == false ){
+                              if(result.rows.item(4).value == 'false' ){
                                   $('.privacy, .sig_outter').hide();
                               }
 
-
-                              if(row.meetingPayForVisitor){
+                              if(result.rows.item(3).value == 'true'){
                                   document.getElementById('radio_paidBy').disabled = false;
                               }else{
                                   document.getElementById('radio_paidBy').disabled = true;
                               $('#radio_paidBy').parent().hide();
                               }
-                              memberList();
-                              ListVisitors();
-                        }
+                              if(result.rows.item(7).value=='none')
+                                $('.privacy').html(defaultPolicy);
+                              else
+                                $('.privacy').html(result.rows.item(7).value);
                     }
                     else{
+                           $('.privacy').html(defaultPolicy);
                            alert("Enter meeting details in Administration tab !!");
                         }
                 },errorHandler);
             },errorHandler,nullHandler);
+      memberList();
+      ListVisitors();
 
 
     /*meetingFee = window.localStorage.getItem("meetingFee");

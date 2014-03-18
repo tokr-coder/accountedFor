@@ -13,17 +13,14 @@ function onBodyLoadSendAttendence(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {  
 
-      var sql = 'SELECT * FROM Settings';
+      var sql = 'SELECT * FROM Setting';
       
         transaction.executeSql(sql, [],function(transaction, result) {
-                    if (result.rows.length > 0) {
-                        for (var i = 0; i < result.rows.length; i++) {
-                               var row = result.rows.item(i);
-                               meetingTime = row.meetingTime;
-                               emailSetupValue = row.email;
-                               groupName = row.nameGroup;
+                    if (result.rows.length > 6) {
+                               meetingTime = result.rows.item(2).value;
+                               emailSetupValue = result.rows.item(6).value;
+                               groupName = result.rows.item(0).value;
                                fillSelectOptionFromDatabase();
-                        }
                     }
                 },errorHandler);
             },errorHandler,nullHandler);
@@ -85,8 +82,10 @@ function getDetailsFromDb (){
     }
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
-                   transaction.executeSql('SELECT * FROM Members', [],function(transaction, result) {
+                   transaction.executeSql('SELECT * FROM Members where member_email=?', [$('#sendAttendenceMember').val()],function(transaction, result) {
                                if (result != null && result.rows != null) {
+                                      console.log("cantidad de registros = "+result.rows.length);
+                                      
                                       for (var i = 0; i < result.rows.length; i++) {
                                           var row = result.rows.item(i);
                             
@@ -118,7 +117,72 @@ function getDetailsFromDb (){
     
 }
 
+function successfullyConnectionMandrill(obj){
+        console.log("respuesta "+JSON.stringify(obj)); 
+        
+        if(obj[0]['status'] == 'sent'){
+           alert("Message sent successfully");
+        }else{
+         console.log("Mensaje no enviado reason "+obj[0]['status']);
+         alert("Unsent message, please try later");
+        } 
+      }
+
+      function incorrectConnectionMandrill(obj){
+         console.log("mala "+JSON.stringify(obj));
+         alert("Unsent message, please try later");
+      }
+
 function sendMemberAttendenceAfterFetchingFromDb (){
+
+  var message='<div style="width:700px; padding:20px; background:#f6f6f6; border:1px solid #ccc; margin:20px auto; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px;">'+
+                  '<table width="100%" border="0" cellpadding="10" cellspacing="0">'+
+                    '<tr>'+
+                      '<td width="17%">Meeting Time:</td>'+
+                      '<td width="83%">'+meetingTime+'</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                      '<td>Group Name:</td>'+
+                      '<td>'+groupName+'</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                      '<td colspan="2">'+
+                      '<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border:1px solid #ccc; border-bottom:none; border-right:none;">'+
+                          '<tr>'+
+                            '<td width="25%" style="border-right:1px solid #ccc;border-bottom:1px solid #ccc"><strong>Member Name</strong></td>'+
+                            '<td width="28%"  style="border-right:1px solid #ccc;border-bottom:1px solid #ccc"><strong>Email</strong></td>'+
+                            '<td width="22%" style="border-right:1px solid #ccc;border-bottom:1px solid #ccc"><strong>Phone Number</strong></td>'+
+                            '<td width="10%" style="border-right:1px solid #ccc;border-bottom:1px solid #ccc"><strong>Balance</strong></td>'+
+                            '<td width="15%" style="border-right:1px solid #ccc;border-bottom:1px solid #ccc" nowrap="nowrap"><strong>Checkin Time</strong></td>'+
+                          '</tr>'+
+                          '<tr>'+
+                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberNameToSendArray[0]+'</td>'+
+                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberEmailToSendArray[0]+'</td>'+
+                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberPhoneToSendArray[0]+'</td>'+
+                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberBalanceToSendArray[0]+'</td>'+
+                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberCheckInTimeToSendArray[0]+'</td>'+
+                          '</tr>'+
+                      '</table>    </td>'+
+                    '</tr>'
+                    '<tr>'
+                    '<td colspan="2">&nbsp;</td>'
+                    '</tr>'
+                '</table>'
+          '</div>';
+
+    var m = new mandrill.Mandrill('EVe75fwrZLEaW0JZkYxmTQ');
+      
+        var params = {
+                "message": {
+                    "from_email":""+emailSetupValue,
+                    "to":[{"email":""+memberEmailToSend}],
+                    "subject": "Attendance Report",
+                    "html": message
+                }
+            };
+      
+        m.messages.send(params,successfullyConnectionMandrill,incorrectConnectionMandrill);
+
     //var groupName=  window.localStorage.getItem("groupName");
     //var meetingTimeFromDB = window.localStorage.getItem("meetingTime");
 
@@ -143,7 +207,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
     
     
 
-      $.ajax({
+     /* $.ajax({
      type: "POST",
      url: 'http://accountedfor.biz/send/attendence.php',
      dataType: 'json',
@@ -151,14 +215,14 @@ function sendMemberAttendenceAfterFetchingFromDb (){
      timeout: 5000,
      success: function(data, status){
              //alert(data.status);
-             /*alert(data.groupName);
+             alert(data.groupName);
              alert(data.meetingTimeFromDB);
              alert(data.memberEmailToSend);
              alert(data.memberNameToSendArray);
              alert(data.memberEmailToSendArray);
              alert(data.memberPhoneToSendArray);
              alert(data.memberBalanceToSendArray);
-             alert(data.memberCheckInTimeToSendArray);*/
+             alert(data.memberCheckInTimeToSendArray);
 
     
              alert("Attendence Send Successfully..");
@@ -167,7 +231,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
      error: function(){
              alert("Attendence Send Successfully..");
              location.reload();     }
-     });
+     });*/
     
 }
 
