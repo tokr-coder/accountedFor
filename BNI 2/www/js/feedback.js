@@ -35,7 +35,8 @@ $(document).ready(function() {
                     "to":[{"email":"apps@twoviewsstudio.com"}],
                     "subject": "Feedback from AccountedFor App",
                     "html": "<p> Name: "+$('#name').val()+"</p></br><p>Email: "+$('#email').val()+"</p></br>"+
-                    "<p>Subject: "+$('#subject').val()+"</p></br>"+"<p>Message: "+$('#message').val()+"</p>"
+                    "<p>Subject: "+$('#subject').val()+"</p></br>"+"<p>Message: "+$('#message').val()+"</p>"+
+                    '<p>Version app:'+VersionApp+' </p>';
                 }
             };
   		

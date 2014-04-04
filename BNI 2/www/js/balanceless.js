@@ -32,7 +32,7 @@ function listLogIntoTable() {
                                     var balanceFromDB = parseFloat(row.member_balance);
                                        
                                    // if(balanceFromDB <= 0){
-                                           $('#MemberList').append('<ul><li class="wid1">'+ count +'</li><li class="wid2">'+ fullName +'</li><li class="wid2" style="border-right:none;">'+ balanceFromDB +'</li></ul>');
+                                           $('#MemberList').append('<ul><li class="wid2">'+ fullName +'</li><li class="wid2" style="border-right:none;">'+ balanceFromDB +'</li></ul>');
                                           count =count+1;
                                     //}
                                 }

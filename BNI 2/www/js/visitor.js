@@ -249,6 +249,7 @@ function payPressed(){
   }
 
 function saveReceipt(name,email,company,meetingFee,my_date,payBy){
+  console.log("Guardando Recibo");
 	db.transaction(function(transaction) {
 		transaction.executeSql('INSERT INTO Receipts(name,email,company,amount,meetingdate,paymentmethod,sent) VALUES (?,?,?,?,?,?,?)',
 			[name,email,company,meetingFee,my_date,payBy,0],
@@ -381,7 +382,7 @@ function insertOrUpdateVisitor(){
   }else if(document.getElementById('radio_cheque').checked) {
       payBy = "Cheque"
   }else {
-      payBy = "Cash";
+      payBy = "false";
   }
 
   var memberidToLog =0;
@@ -398,13 +399,17 @@ function insertOrUpdateVisitor(){
         console.log("cantidad de visitas "+ numberVisit);
 
       db = openDatabase(shortName, version, displayName,maxSize);
-      db.transaction(function(transaction) {
-      transaction.executeSql(
-      'INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',
-      [my_date,my_time,name,vistor,action,balanceForVisitor,payBy,memberidToLog,changeAmount,signOrpay],
-      saveReceipt(name,email,company,meetingFee,my_date,payBy),
-      errorHandler);
-    });
+        if(payBy != 'false'){
+          db.transaction(function(transaction) {
+            transaction.executeSql(
+            'INSERT INTO Log(log_date, log_time,log_name,log_visitor,log_action,log_balance,log_paidBy,memberInLogId,changeAmount,signinOrPay) VALUES (?,?,?,?,?,?,?,?,?,?)',
+            [my_date,my_time,name,vistor,action,balanceForVisitor,payBy,memberidToLog,changeAmount,signOrpay],
+            saveReceipt(name,email,company,meetingFee,my_date,payBy),
+            errorHandler);
+          });
+        }
+          
+      
 
     }else{
       numberVisit = numberVisit;

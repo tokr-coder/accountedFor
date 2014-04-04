@@ -3,12 +3,16 @@ var db;
 var shortName = 'BNISqlDB';
 var version = '1.0';
 var displayName = 'BNISqlDB';
+//var shortName = 'bdtestingBNI';
+//var version = '2.1';
+//var displayName = 'bdtestingBNI';
 var maxSize = 65535;
 var meetingFee;
 var iconImg= 'images/accountedforicon.png';
 var emailSetting = 'bni@bni.com';
 var debug = true;
 var meetingTime;
+var versionApp = '2.1';
 
 
 var defaultPolicy = 'We respect your right to privacy and wish to make you aware of how we will handle your personal information. By providing us with your personal information, you agree that we may collect your Personal Information (as defined by the Federal Personal Information Protection and Electronic Documents Act. PIPEDA) and may do the following with your personal information.<br><br>'+
@@ -66,12 +70,6 @@ function CreateLogTable() {
 }
 function updateApp(){
     
-    var update = window.localStorage.getItem("update1");
-    db = openDatabase(shortName, version, displayName,maxSize);
-    
-
-    if(update == null){
-      
       db.transaction(function(tx){
         tx.executeSql('CREATE TABLE IF NOT EXISTS Receipts(id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, company TEXT NOT NULL, amount INTEGER NOT NULL, meetingdate TEXT NOT NULL, paymentmethod TEXT NOT NULL, sent BIT NOT NULL)',
             [],nullHandler,errorHandler);
@@ -79,20 +77,21 @@ function updateApp(){
             [],nullHandler,errorHandler);
         tx.executeSql('CREATE TABLE IF NOT EXISTS Setting(id INTEGER UNIQUE, nameSetting TEXT NOT NULL, value TEXT NOT NULL)',
             [],nullHandler,errorHandler);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[1,'nameGroup',window.localStorage.getItem("groupName")]);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[2,'meetingFee',window.localStorage.getItem("meetingFee")]); 
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[3,'meetingTime',window.localStorage.getItem("meetingTime")]);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[4,'meetingPayForVisitor',window.localStorage.getItem("visitorAllow")]);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[5,'meetingRequireSig','true']);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[6,'imageURI',iconImg]);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[7,'email',emailSetting]);
-        tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[8,'policy','none']);
-        window.localStorage.setItem("update1","false");
-        update = window.localStorage.getItem("update1");
+
+        if(window.localStorage.getItem("groupName") != null){
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[1,'nameGroup',window.localStorage.getItem("groupName")]);
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[2,'meetingFee',window.localStorage.getItem("meetingFee")]); 
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[3,'meetingTime',window.localStorage.getItem("meetingTime")]);
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[4,'meetingPayForVisitor',window.localStorage.getItem("visitorAllow")]);
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[5,'meetingRequireSig','true']);
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[6,'imageURI',iconImg]);
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[7,'email',emailSetting]);
+            tx.executeSql('INSERT INTO Setting(id, nameSetting, value) VALUES (?,?,?)',[8,'policy','none']);
+        }
       },errorHandler,ListAllMembers);    
-    }else{
-      ListAllMembers();
-    }
+    
+      //ListAllMembers();
+    
 }
 
 function ListAllMembers() {
@@ -120,7 +119,7 @@ function ListAllMembers() {
                                  largeImage.src = result.rows.item(5).value;
                                  document.getElementById("GroupNameDiv").innerHTML=result.rows.item(0).value;
                                  meetingTime = result.rows.item(2).value;
-                            
+                                 meetingFee = result.rows.item(1).value;
 
                                 db.transaction(function(transaction) {
                                 transaction.executeSql('SELECT * FROM Members ORDER BY member_firstname;', [],function(transaction, results) {
@@ -140,7 +139,7 @@ function ListAllMembers() {
                                         if(activeOrNot==1){
                                               var htmlRow = '<ul><li class="wid1"';
                                               if(IsLate(rowMember.member_checkintime, meetingTime)){htmlRow += ' style="color:red;"';}
-                                              htmlRow += '>'+ fullName +'</li><li class="wid2 sign'+ rowMember.member_id +'">'+ rowMember.member_checkintime +'</li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'">Paid</a></li></ul>';
+                                              htmlRow += '>'+ fullName +'</li><li class="wid2 sign'+ rowMember.member_id +'">'+ rowMember.member_checkintime +'</li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'"><input type="button" class="login" value="Paid"/></a></li></ul>';
                                               $('#MemberList').append(htmlRow);
                                               
                                         }else{
@@ -148,13 +147,13 @@ function ListAllMembers() {
                                               if(rowMember.member_balance >= meetingFee) {
                                                     html = '<ul><li class="wid1">'+ fullName +'</li><li class="wid2 sign'+ rowMember.member_id +'"><input ';
                                                     if (disabled == '') html += 'onClick="signInPressed((this.id))" ';
-                                                    html += 'type="button" class="login" value="Sign in" id="'+rowMember.member_id+'" '+disabled+'/></li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'">Pre Paid</a></li></ul>';
+                                                    html += 'type="button" class="login" value="Sign in" id="'+rowMember.member_id+'" '+disabled+'/></li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: #000000" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'"><input type="button" class="login" value="Pre Paid"/></a></li></ul>';
                                                     $('#MemberList').append(html);
                                               
                                               }else {
                                                     html = '<ul><li class="wid1">'+ fullName +'</li><li class="wid2"><a class="fee'+ rowMember.member_id +'" ';
                                                     if (disabled == '') html += 'href="payment.html?fromlink=no&id=' +rowMember.member_id+'"';
-                                                    html += '><input type="button" class="login_pay" value="Pay &amp; Sign In" '+disabled+'/></a></li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" style="color: red;" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'">Payment needed</a></li></ul>';
+                                                    html += '><input type="button" class="login_pay" value="Pay &amp; Sign In" '+disabled+'/></a></li><li class="wid2" style="border-right:none;"><a class="fee'+ rowMember.member_id +'" href="payment.html?fromlink=ok&id='+ rowMember.member_id+'"><input type="button" class="login" value="Payment needed" style="color: red;"/></a></li></ul>';
                                                     $('#MemberList').append(html);
                                               }
                                               
