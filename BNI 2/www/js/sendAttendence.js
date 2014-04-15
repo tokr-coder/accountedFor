@@ -5,7 +5,7 @@ var memberEmailToSendArray = new Array();
 var memberPhoneToSendArray = new Array();
 var memberBalanceToSendArray = new Array();
 var memberCheckInTimeToSendArray = new Array();
-var meetingTime, emailSetupValue, groupName;
+var meetingTime, emailSetupValue, groupName, meetingDate;
 
 
 function onBodyLoadSendAttendence(){
@@ -82,9 +82,8 @@ function getDetailsFromDb (){
     }
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
-                   transaction.executeSql('SELECT * FROM Members where member_email=?', [$('#sendAttendenceMember').val()],function(transaction, result) {
+                   transaction.executeSql('SELECT * FROM Members', [],function(transaction, result) {
                                if (result != null && result.rows != null) {
-                                      console.log("cantidad de registros = "+result.rows.length);
                                       
                                       for (var i = 0; i < result.rows.length; i++) {
                                           var row = result.rows.item(i);
@@ -113,8 +112,25 @@ function getDetailsFromDb (){
                                         }
                                   }
                     },errorHandler);
-    },errorHandler,sendMemberAttendenceAfterFetchingFromDb);
+    },errorHandler,searchingDateMeeting);
     
+}
+
+function searchingDateMeeting(){
+    db = openDatabase(shortName, version, displayName,maxSize);
+    db.transaction(function(transaction) {
+                   transaction.executeSql('SELECT * FROM Log ORDER BY log_id DESC;', [],function(transaction, result) {
+                               if (result != null && result.rows != null) {
+                                      for (var i = 0; i < result.rows.length; i++) {
+                                          var row = result.rows.item(i);
+                                          if(row.log_action == 'meeting start'){
+                                              meetingDate = row.log_date;
+                                              break;
+                                          }
+                                        }
+                                  }
+                    },errorHandler);
+    },errorHandler,sendMemberAttendenceAfterFetchingFromDb);
 }
 
 function successfullyConnectionMandrill(obj){
@@ -134,12 +150,23 @@ function successfullyConnectionMandrill(obj){
       }
 
 function sendMemberAttendenceAfterFetchingFromDb (){
+  var bodyTable='';
+  for (var i=0 ; i < memberNameToSendArray.length; i++) {
+
+    bodyTable+= '<tr>'+
+                 '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberNameToSendArray[i]+'</td>'+
+                 '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberEmailToSendArray[i]+'</td>'+
+                 '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberPhoneToSendArray[i]+'</td>'+
+                 '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberBalanceToSendArray[i]+'</td>'+
+                 '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberCheckInTimeToSendArray[i]+'</td>'+
+               '</tr>';
+  }
 
   var message='<div style="width:700px; padding:20px; background:#f6f6f6; border:1px solid #ccc; margin:20px auto; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:20px;">'+
                   '<table width="100%" border="0" cellpadding="10" cellspacing="0">'+
                     '<tr>'+
                       '<td width="17%">Meeting Time:</td>'+
-                      '<td width="83%">'+meetingTime+'</td>'+
+                      '<td width="83%">'+meetingDate+'</td>'+
                     '</tr>'+
                     '<tr>'+
                       '<td>Group Name:</td>'+
@@ -155,13 +182,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
                             '<td width="10%" style="border-right:1px solid #ccc;border-bottom:1px solid #ccc"><strong>Balance</strong></td>'+
                             '<td width="15%" style="border-right:1px solid #ccc;border-bottom:1px solid #ccc" nowrap="nowrap"><strong>Checkin Time</strong></td>'+
                           '</tr>'+
-                          '<tr>'+
-                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberNameToSendArray[0]+'</td>'+
-                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberEmailToSendArray[0]+'</td>'+
-                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberPhoneToSendArray[0]+'</td>'+
-                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberBalanceToSendArray[0]+'</td>'+
-                            '<td style="border-right:1px solid #ccc;border-bottom:1px solid #ccc">'+memberCheckInTimeToSendArray[0]+'</td>'+
-                          '</tr>'+
+                          bodyTable+
                       '</table>    </td>'+
                     '</tr>'
                     '<tr>'
@@ -170,7 +191,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
                 '</table>'
           '</div>';
 
-    var m = new mandrill.Mandrill('EVe75fwrZLEaW0JZkYxmTQ');
+    var m = new mandrill.Mandrill('');
       
         var params = {
                 "message": {
@@ -181,7 +202,7 @@ function sendMemberAttendenceAfterFetchingFromDb (){
                 }
             };
       
-        m.messages.send(params,successfullyConnectionMandrill,incorrectConnectionMandrill);
+      m.messages.send(params,successfullyConnectionMandrill,incorrectConnectionMandrill);
 
     //var groupName=  window.localStorage.getItem("groupName");
     //var meetingTimeFromDB = window.localStorage.getItem("meetingTime");

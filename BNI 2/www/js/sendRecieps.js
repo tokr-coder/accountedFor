@@ -310,7 +310,7 @@ function sendReciepsFromMandrill(totalEmails, positionActual, memberIdToSendArra
         '</table>'+
         '</div>';
 
-        var m = new mandrill.Mandrill('EVe75fwrZLEaW0JZkYxmTQ');
+        var m = new mandrill.Mandrill('');
         var params = {
               "message": {
                   "from_email":""+emailSetupValue,

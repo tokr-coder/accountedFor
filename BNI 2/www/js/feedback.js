@@ -27,7 +27,7 @@ $(document).ready(function() {
       
       function sendEmail(){
       
-      	var m = new mandrill.Mandrill('EVe75fwrZLEaW0JZkYxmTQ');
+      	var m = new mandrill.Mandrill('');
   		
     		var params = {
                 "message": {
