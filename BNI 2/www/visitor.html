@@ -222,7 +222,7 @@
             $('#tipoVisitor').html('Visitor invited by:<span>*</span>');
             $("#members option").remove();
             $("#members").append("<option value='0'>None</option>");
-            loadMemberList();
+            loadMemberList(1);
             
 
             //alert($('input[id=radio_visitor]:checked').val());
@@ -236,7 +236,7 @@
             document.getElementById('radio_paidBy').disabled = true;
             $('#tipoVisitor').html('Substitute for:<span>*</span>');
             $("#members option").remove();
-            loadMemberList();
+            loadMemberList(0);
             
             // document.getElementById('radio_paidBy').disabled = false;
 

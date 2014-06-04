@@ -103,14 +103,15 @@ function memberList(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
       
-      var sql = 'SELECT * FROM Members where member_active = 0';
+      var sql = 'SELECT * FROM Members';
         transaction.executeSql(sql, [],function(transaction, result) {
                     if (result != null && result.rows != null) {
                         for (var i = 0; i < result.rows.length; i++) {
                              var row = result.rows.item(i);
                              var idMember = row.member_id;
                              var nameMember = row.member_firstname+' '+row.member_lastname;
-                             arrayMember.push({"value" : idMember, "name" : nameMember });
+                             var active = row.member_active;
+                             arrayMember.push({"value" : idMember, "name" : nameMember, "active": active });
                         }
                     }
                 },errorHandler);
@@ -121,7 +122,7 @@ function memberList(){
 function ListVisitors(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
-      var sql = 'SELECT * FROM Visitors ';
+      var sql = 'SELECT * FROM Visitors ORDER BY name';
         transaction.executeSql(sql, [],function(transaction, result) {
                     if (result != null && result.rows != null) {
                         for (var i = 0; i < result.rows.length; i++) {
@@ -169,10 +170,16 @@ function ClearPressed() {
     list.value = "";
 }
 
-function loadMemberList(){
+function loadMemberList(condition){
 
   for (var i = 0; i < arrayMember.length; i++) {
-    $("#members").append('<option value="'+arrayMember[i].value+'"> '+arrayMember[i].name+'</option>');
+    if(condition == 0){
+        if(condition === arrayMember[i].active)
+          $("#members").append('<option value="'+arrayMember[i].value+'"> '+arrayMember[i].name+'</option>');  
+    }
+    else{
+      $("#members").append('<option value="'+arrayMember[i].value+'"> '+arrayMember[i].name+'</option>');  
+    }
   }
 }
 
