@@ -103,7 +103,7 @@ function memberList(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
       
-      var sql = 'SELECT * FROM Members';
+      var sql = 'SELECT * FROM Members ORDER BY member_firstname ASC';
         transaction.executeSql(sql, [],function(transaction, result) {
                     if (result != null && result.rows != null) {
                         for (var i = 0; i < result.rows.length; i++) {
@@ -122,7 +122,7 @@ function memberList(){
 function ListVisitors(){
     db = openDatabase(shortName, version, displayName,maxSize);
     db.transaction(function(transaction) {
-      var sql = 'SELECT * FROM Visitors ORDER BY name';
+      var sql = 'SELECT * FROM Visitors';
         transaction.executeSql(sql, [],function(transaction, result) {
                     if (result != null && result.rows != null) {
                         for (var i = 0; i < result.rows.length; i++) {
